@@ -6,13 +6,19 @@ import { Input, CustomInput } from 'reactstrap';
 import FormValidator from '../Forms/FormValidator';
 import ApiHelper from "../../helpers/api.helper";
 import {API_COMMAND} from "../../types/api.type";
+import _ from 'underscore'
+import {Dispatch} from "redux";
+import {LOGIN, loginAction, ResponseLogin} from "../../store/actions/session.actions";
 
-
-class Login extends Component {
+interface PropsInterface {
+    login: Function,
+    user: any
+}
+class Login extends Component<PropsInterface> {
 
     state = {
         formLogin: {
-            email: '',
+            username: '',
             password: ''
         }
     }
@@ -58,22 +64,16 @@ class Login extends Component {
         ApiHelper.request(
             API_COMMAND.SIGNIN,
             {
-                loginId: this.state.formLogin.email,
+                username: this.state.formLogin.username,
                 password: this.state.formLogin.password,
             },
             { isLoading: true }
         ).subscribe(
-            (response) => {
-                // this.props.login({
-                //     token: response.headers.authorization,
-                //     userData: response.data,
-                //     saveId: this.state.saveId ? this.state.loginId : '',
-                //     callback: () => {
-                //         if (!_.isEmpty(this.props.user) && this.props.user.status !== USER_STATUS.PWDINIT) {
-                //             window.location.replace('/');
-                //         }
-                //     }
-                // });
+            (response: any) => {
+                this.props.login({
+                    status: response.data.status,
+                    token: response.data.token,
+                });
             },
             error => {
                 try {
@@ -113,21 +113,20 @@ class Login extends Component {
                         <form className="mb-3" name="formLogin" onSubmit={this.onSubmit}>
                             <div className="form-group">
                                 <div className="input-group with-focus">
-                                    <Input type="email"
-                                        name="email"
+                                    <Input type="text"
+                                        name="username"
                                         className="border-right-0"
-                                        placeholder="Enter email"
-                                        invalid={this.hasError('formLogin','email','required')||this.hasError('formLogin','email','email')}
+                                        placeholder="Enter Username"
+                                        invalid={this.hasError('formLogin','username','required')||this.hasError('formLogin','username','username')}
                                         onChange={this.validateOnChange}
-                                        data-validate='["required", "email"]'
-                                        value={this.state.formLogin.email}/>
+                                        data-validate='["required"]'
+                                        value={this.state.formLogin.username}/>
                                     <div className="input-group-append">
                                         <span className="input-group-text text-muted bg-transparent border-left-0">
                                             <em className="fa fa-envelope" />
                                         </span>
                                     </div>
-                                    { this.hasError('formLogin','email','required') && <span className="invalid-feedback">Field is required</span> }
-                                    { this.hasError('formLogin','email','email') && <span className="invalid-feedback">Field must be valid email</span> }
+                                    { this.hasError('formLogin','username','required') && <span className="invalid-feedback">Field is required</span> }
                                 </div>
                             </div>
                             <div className="form-group">
@@ -186,8 +185,8 @@ const stateToProps = (state: any) => {
     };
 };
 
-const dispatchToProps = (dispatch: any) => ({
-    // login: (response: any) => dispatch(sessionActions.login(response)),
+const dispatchToProps = (dispatch: Dispatch) => ({
+    login: (response: ResponseLogin) => dispatch(loginAction(response)),
     dispatch
 });
 

@@ -1,5 +1,5 @@
 import React, {Suspense, lazy} from 'react';
-import {withRouter, Switch, Route, Redirect, RouteProps} from 'react-router-dom';
+import {Switch, Route, Redirect} from 'react-router-dom';
 import {TransitionGroup, CSSTransition} from 'react-transition-group';
 import {connect} from 'react-redux';
 
@@ -8,7 +8,6 @@ import PageLoader from './components/Common/PageLoader';
 
 import Base from './components/Layout/Base';
 import BasePage from './components/Layout/BasePage';
-import _ from 'underscore';
 
 /* Used to render a lazy component with react-router */
 const waitFor = (Tag: React.LazyExoticComponent<any>) => (props: any) => <Tag {...props}/>;
@@ -48,13 +47,7 @@ class Routes extends React.PureComponent<any, any> {
         const animationName = 'rag-fadeIn'
         const currentKey = this.props.location!.pathname.split('/')[1] || '/';
         const timeout = {enter: 500, exit: 500};
-        if (!this.props.authenticated || _.isEmpty(this.props.user)) {
-            return (
-                <>
-                    <Redirect to="/login"/>
-                </>
-            );
-        } else if (listofPages.indexOf(this.props.location!.pathname) > -1) {
+        if (listofPages.indexOf(this.props.location!.pathname) > -1) {
             return (
                 // Page Layout component wrapper
                 <BasePage>
@@ -86,8 +79,8 @@ class Routes extends React.PureComponent<any, any> {
                                         <Route path="/blog-post" component={waitFor(BlogPost)}/>
                                         <Route path="/blog-articles" component={waitFor(BlogArticle)}/>
                                         <Route path="/blog-article-view" component={waitFor(BlogArticleView)}/>
-
-                                        <Redirect to="/blog-list"/>
+                                        
+                                        <Redirect to='/blog-list' />
                                     </Switch>
                                 </Suspense>
                             </div>
@@ -101,7 +94,7 @@ class Routes extends React.PureComponent<any, any> {
 
 const stateToProps = (state: any) => {
     return {
-        authenticated: state.authenticated,
+        authenticated: state.session.authenticated,
     };
 };
 

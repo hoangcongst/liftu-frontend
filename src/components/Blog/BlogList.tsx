@@ -1,32 +1,31 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import ContentWrapper from '../Layout/ContentWrapper';
-import { Row, Col, Card, CardHeader, CardBody, CardColumns } from 'reactstrap';
-import $ from 'jquery';
-// JQ Cloud
-import 'jqcloud2/dist/jqcloud.css';
-import 'jqcloud2/dist/jqcloud.js';
+import {Row, Col, Card, CardHeader, CardBody, CardColumns} from 'reactstrap';
+import ApiHelper from "../../helpers/api.helper";
+import {API_COMMAND} from "../../types/api.type";
 
 class BlogList extends Component {
 
     state = {
-        //Create an array of word objects, each representing a word in the cloud
-        word_array: [
-            { text: 'Lorem', weight: 13 /*link: 'http://themicon.co'*/},
-            { text: 'Ipsum', weight: 10.5},
-            { text: 'Dolor', weight: 9.4},
-            { text: 'Sit', weight: 8},
-            { text: 'Amet', weight: 6.2},
-            { text: 'Consectetur', weight: 5},
-            { text: 'Adipiscing', weight: 5},
-            { text: 'Sit', weight: 8},
-            { text: 'Amet', weight: 6.2},
-            { text: 'Consectetur', weight: 5},
-            { text: 'Adipiscing', weight: 5
-        }]
+        posts: []
     }
 
     componentDidMount() {
+        this.loadPosts()
+    }
 
+    loadPosts() {
+        ApiHelper.request(
+            API_COMMAND.POST_READ,
+            {},
+            {isLoading: true}
+        ).subscribe(
+            (response: any) => {
+                this.setState({
+                    posts: response.data._embedded.posts
+                })
+            }
+        );
     }
 
     render() {
@@ -36,31 +35,36 @@ class BlogList extends Component {
                     {/* Blog Content */}
                     <Col xl="9">
                         <CardColumns>
-                            <Card>
-                                <a href="">
-                                    <img className="img-fluid" src="img/bg1.jpg" alt="Demo"/>
-                                </a>
-                                <CardBody>
-                                    <p className="d-flex">
+                            {
+                                this.state.posts.map((post: any) => {
+                                    return <Card>
+                                        <a href="">
+                                            <img className="img-fluid" src="img/bg1.jpg" alt="Demo"/>
+                                        </a>
+                                        <CardBody>
+                                            <p className="d-flex">
                                         <span>
                                             <small className="mr-1">By
                                                 <a className="ml-1" href="">Erica Castro</a>
                                             </small>
-                                            <small className="mr-1">May 03, 2015</small>
+                                            <small className="mr-1">{post.created_at}</small>
                                         </span>
-                                        <span className="ml-auto">
+                                                <span className="ml-auto">
                                             <small>
                                                 <strong>56</strong>
                                                 <span> Comments</span>
                                             </small>
                                         </span>
-                                    </p>
-                                    <h4>
-                                        <a href="">Trip down the river</a>
-                                    </h4>
-                                    <p>Aenean in sollicitudin velit. Nam sem magna, tristique non facilisis a, porta ut elit. Aliquam luctus nulla in justo euismod blandit. Aliquam condimentum enim a risus cursus blandit.</p>
-                                </CardBody>
-                            </Card>
+                                            </p>
+                                            <h4>
+                                                <a href="">{post.title}</a>
+                                            </h4>
+                                            <p>{post.description!}</p>
+                                        </CardBody>
+                                    </Card>
+                                })
+                            }
+
                         </CardColumns>
                     </Col>
                     {/* Blog Sidebar */}
@@ -128,7 +132,7 @@ class BlogList extends Component {
                     </Col>
                 </Row>
             </ContentWrapper>
-            );
+        );
     }
 
 }

@@ -15,23 +15,7 @@ const StorageHelper = {
   },
 
   clear () {
-    // ignore data
-    const roomKnowList = this.get('roomKnowList');
-    const searchConfigs = this.get('@search_configs');
 
-    const isChatRoomNew = this.get('@isChatRoomNew');
-    const isChatBotOptionsOpen = this.get('@isChatBotOptionsOpen');
-    const isAnswersOptionsOpen = this.get('@isAnswersOptionsOpen');
-    const tab = this.get('@tab');
-    // localStorage.clear();
-
-    // re-set ignore data
-    this.set('roomKnowList', roomKnowList);
-    this.set('@search_configs', searchConfigs);
-    this.set('@isChatRoomNew', isChatRoomNew);
-    this.set('@isChatBotOptionsOpen', isChatBotOptionsOpen);
-    this.set('@isAnswersOptionsOpen', isAnswersOptionsOpen);
-    this.set('@tab', tab);
   },
 
   remove (key: string) {

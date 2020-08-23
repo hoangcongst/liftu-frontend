@@ -7,7 +7,7 @@
   "private": true,
   "homepage": ".",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "NODE_ENV=development&&react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -117,8 +117,6 @@
     "react-transition-group": "2.5.0",
     "reactstrap": "6.5.0",
     "recompose": "0.30.0",
-    "redux-actions": "^2.6.5",
-    "redux-react-session": "^2.6.1",
     "rtlcss": "2.4.0",
     "screenfull": "4.2.1",
     "simple-line-icons": "2.4.1",

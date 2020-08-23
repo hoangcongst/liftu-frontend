@@ -22,65 +22,62 @@ import './styles/bootstrap.scss';
 import './styles/app.scss'
 import {connect} from "react-redux";
 import CommonHelper from "./helpers/common.helper";
-import * as sessionActions from './store/reducers/session.reducer';
 import _ from 'underscore'
-import ApiHelper from "./helpers/api.helper";
-import {API_COMMAND} from "./types/api.type";
+import {LOGIN, LOGOUT} from "./store/actions/session.actions";
 
 interface PropsApp {
     location: any,
     authenticated?: boolean,
-    logout?: any
+    logout?: Function
     history?: any
 }
 
 class App extends Component<PropsApp> {
     constructor(props: PropsApp) {
         super(props)
-        // this._checkAuth();
+        this._checkAuth();
     }
 
-    // _checkAuth = () => {
-    //     if (this.props.authenticated && !CommonHelper.getToken()) {
-    //         this.props.logout({
-    //             callback: () => {
-    //                 window.location.href = '/';
-    //             }
-    //         });
-    //         return;
-    //     }
-    //
-    //     if (!this.props.authenticated && !_.isEmpty(CommonHelper.getToken()) && !_.isEmpty(CommonHelper.getCookie('userId'))) {
-        //     ApiHelper.request(API_COMMAND.USERS_DETAIL, {}, {}, { id: CommonHelper.getCookie('userId') }).subscribe(
-        //         (response) => {
-        //             this.props.login({
-        //                 token: CommonHelper.getToken(),
-        //                 userData: response.data,
-        //                 saveId: ''
-        //             });
-        //         },
-        //         () => {
-        //             this._initApp();
-        //         }
-        //     );
-    //     } else {
-    //         this._initApp();
-    //     }
-    // };
+    _checkAuth = () => {
+        if (this.props.authenticated && !CommonHelper.getToken()) {
+            this.props.logout!({
+                callback: () => {
+                    window.location.href = '/';
+                }
+            });
+            return;
+        }
 
-    // _initApp = () => {
-    //     this._moveUserPage();
-    // };
-    //
-    // _moveUserPage = () => {
-    //     console.log('move to login')
-    //     if (!this.props.authenticated && this.props.location.pathname !== '/user/login') {
-    //         this.props.history.push('/user/login');
-    //     }
-    // };
+        if (!this.props.authenticated && !_.isEmpty(CommonHelper.getToken()) && !_.isEmpty(CommonHelper.getCookie('userId'))) {
+            // ApiHelper.request(API_COMMAND.USERS_DETAIL, {}, {}, {id: CommonHelper.getCookie('userId')}).subscribe(
+            //     (response) => {
+            //         this.props.login({
+            //             token: CommonHelper.getToken(),
+            //             userData: response.data,
+            //             saveId: ''
+            //         });
+            //     },
+            //     () => {
+            //         this._initApp();
+            //     }
+            // );
+        } else {
+            this._initApp();
+        }
+    };
+
+    _initApp = () => {
+        this._moveUserPage();
+    };
+
+    _moveUserPage = () => {
+        if (!this.props.authenticated && this.props.location.pathname !== '/login') {
+            this.props.history.push('/login');
+        }
+    };
 
     render() {
-        let { location } = this.props
+        let {location} = this.props
         return (
             <Routes location={location}/>
         );
@@ -89,14 +86,14 @@ class App extends Component<PropsApp> {
 
 const stateToProps = (state: any) => {
     return {
-        authenticated: state.authenticated,
+        authenticated: state.session.authenticated,
         user: state.user
     };
 };
 
 const dispatchToProps = (dispatch: any) => ({
-    login: (response: any) => dispatch(sessionActions.login(response)),
-    logout: (payload: any) => dispatch(sessionActions.logout(payload)),
+    login: (response: any) => dispatch({ 'type': LOGIN, response }),
+    logout: (payload: any) =>  dispatch({ 'type': LOGOUT, payload }),
     dispatch
 });
 

@@ -4,29 +4,25 @@ import _ from 'underscore';
 import CommonHelper from './common.helper';
 import { API_COMMAND } from '../types/api.type';
 
-// @ts-ignore
-import { sessionService } from 'redux-react-session';
-
 interface apiCmd {
   method: string;
   url: string;
 }
 
 // @ts-ignore
-axios.defaults.baseURL = 'http://localhost:3000'
+axios.defaults.baseURL = 'http://localhost:8090'
 axios.defaults.timeout = 10000;
 
 let $loading: any;
 const ApiHelper = {
   request(cmd: apiCmd, params?: any, requestConfig?: any, pathVariable?: any) {
     const token = CommonHelper.getToken();
-
     if (requestConfig && !requestConfig['content-type']) {
       axios.defaults.headers.common['Content-Type'] = 'application/vnd.hbot.v1+json';
     }
 
     if (cmd !== API_COMMAND.SIGNIN && token) {
-      axios.defaults.headers.common['Authorization'] = token;
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
     }
 
     $loading = document.getElementById('loading');
@@ -44,7 +40,6 @@ const ApiHelper = {
         .then((response: any) => {
           if (response && response.headers && response.headers.authorization) {
             CommonHelper.setToken(response.headers.authorization);
-            sessionService.saveSession(response.headers.authorization);
           }
 
           isLoading && this._hideLoading();

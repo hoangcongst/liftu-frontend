@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import ContentWrapper from '../Layout/ContentWrapper';
 import { Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
-import $ from 'jquery';
-// JQ Cloud
-import 'jqcloud2/dist/jqcloud.css';
-import 'jqcloud2/dist/jqcloud.js';
 
 class BlogPost extends Component {
 

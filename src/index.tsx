@@ -17,12 +17,8 @@ import configureStore from './store/store';
 import {BrowserRouter} from "react-router-dom";
 import './i18n';
 
-declare var PUBLIC_URL: string;
-
-
-
 const store = configureStore();
-const basename = process.env.NODE_ENV === 'development' ? '/' : (PUBLIC_URL || '/');
+const basename = process.env.NODE_ENV === 'development' ? '/' : ('http://localhost:8090' || '/');
 
 ReactDOM.render(
     <Provider store={store}>
