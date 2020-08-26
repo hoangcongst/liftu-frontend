@@ -63,6 +63,7 @@
     "datatables.net-responsive-bs": "2.2.3",
     "deep-equal": "1.0.1",
     "draft-js": "^0.10.5",
+    "draftjs-to-html": "^0.9.1",
     "easy-pie-chart": "2.1.7",
     "element-closest": "3.0.1",
     "flot": "themicon/flot",

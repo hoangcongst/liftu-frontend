@@ -37,7 +37,7 @@ class BlogList extends Component {
                         <CardColumns>
                             {
                                 this.state.posts.map((post: any) => {
-                                    return <Card>
+                                    return <Card key={post.id}>
                                         <a href="">
                                             <img className="img-fluid" src="img/bg1.jpg" alt="Demo"/>
                                         </a>
