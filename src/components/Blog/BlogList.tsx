@@ -18,7 +18,7 @@ class BlogList extends Component {
 
     loadPosts() {
         ApiHelper.request(
-            API_COMMAND.POST_READ,
+            API_COMMAND.POST_INDEX,
             {},
             {isLoading: true}
         ).subscribe(
@@ -40,7 +40,7 @@ class BlogList extends Component {
                             {
                                 this.state.posts.map((post: any) => {
                                     return <Card key={post.id}>
-                                        <Link to="/blog-post" >
+                                        <Link to={"/posts/" + post.id} >
                                             <img className="img-fluid" src="img/bg1.jpg" alt="Demo"/>
                                         </Link>
                                         <CardBody>
@@ -59,7 +59,7 @@ class BlogList extends Component {
                                         </span>
                                             </p>
                                             <h4>
-                                                <Link to="/blog-post">{post.title}</Link>
+                                                <Link to={"/posts/" + post.id}>{post.title}</Link>
                                             </h4>
                                             <p>{post.description!}</p>
                                         </CardBody>
@@ -120,15 +120,6 @@ class BlogList extends Component {
                             <CardHeader>Tag Cloud</CardHeader>
                             <CardBody>
                                 <div ref="jqcloud" className="mw-100"></div>
-                            </CardBody>
-                        </Card>
-                        {/* Ads */}
-                        <Card className="card-default">
-                            <CardHeader>Ads</CardHeader>
-                            <CardBody className="ie-fix-flex">
-                                <a href="">
-                                    <img className="img-fluid img-thumbnail" src="img/mockup.png" alt="Demo"/>
-                                </a>
                             </CardBody>
                         </Card>
                     </Col>

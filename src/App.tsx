@@ -20,47 +20,13 @@ import "./Vendor";
 // Application Styles
 import './styles/bootstrap.scss';
 import './styles/app.scss'
-import {connect} from "react-redux";
-import CommonHelper from "./helpers/common.helper";
 import _ from 'underscore'
-import {LOGIN, LOGOUT} from "./store/actions/session.actions";
 
 interface PropsApp {
-    location: any,
-    authenticated?: boolean,
-    logout?: Function
-    history?: any
+    location: any
 }
 
 class App extends Component<PropsApp> {
-    constructor(props: PropsApp) {
-        super(props)
-        this._checkAuth();
-    }
-
-    _checkAuth = () => {
-        if (_.isEmpty(CommonHelper.getToken())) {
-            // this.props.logout!({
-            //     callback: () => {
-            //         window.location.href = '/';
-            //     }
-            // });
-            // return;
-        
-            this._initApp();
-        }
-    };
-
-    _initApp = () => {
-        this._moveUserPage();
-    };
-
-    _moveUserPage = () => {
-        if (this.props.location.pathname !== '/login') {
-            this.props.history.push('/login');
-        }
-    };
-
     render() {
         let {location} = this.props
         return (
@@ -69,20 +35,4 @@ class App extends Component<PropsApp> {
     }
 }
 
-const stateToProps = (state: any) => {
-    return {
-        authenticated: state.session.authenticated,
-        user: state.user
-    };
-};
-
-const dispatchToProps = (dispatch: any) => ({
-    login: (response: any) => dispatch({ 'type': LOGIN, response }),
-    logout: (payload: any) =>  dispatch({ 'type': LOGOUT, payload }),
-    dispatch
-});
-
-export default connect(
-    stateToProps,
-    dispatchToProps
-)(withRouter(props => <App {...props} />));
+export default withRouter(App as any);

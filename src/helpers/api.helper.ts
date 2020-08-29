@@ -10,7 +10,7 @@ interface apiCmd {
 }
 
 // @ts-ignore
-axios.defaults.baseURL = 'http://localhost:8090'
+axios.defaults.baseURL = 'http://api.liftu.tektap.me'
 axios.defaults.timeout = 10000;
 
 let $loading: any;

@@ -13,8 +13,8 @@ import CommonHelper from "../../helpers/common.helper";
 import StorageHelper from "../../helpers/storage.helper";
 
 const login = (state: any, action: any) => {
-    const { status, token } = action.response;
-    if (status === LOGIN_SUCCESS) {
+    const { token } = action;
+    if (token) {
         CommonHelper.setToken(token);
         return {
             ...state,
@@ -55,7 +55,7 @@ const initialState: Session = {
 }
 
 const redirectLogin = (state: any, action: any) => {
-    const { url } = action.response;
+    const { url } = action;
     return {
         ...state,
         redirectUrl: url,

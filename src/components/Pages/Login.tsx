@@ -7,10 +7,9 @@ import {compose} from 'redux'
 import FormValidator from '../Forms/FormValidator';
 import ApiHelper from "../../helpers/api.helper";
 import {API_COMMAND} from "../../types/api.type";
-import _ from 'underscore'
 import {Dispatch} from "redux";
-import {LOGIN, loginAction, ResponseLogin, setRedirect} from "../../store/actions/session.actions";
 
+import {loginAction, setRedirect} from "../../store/actions/session.actions";
 interface PropsInterface {
     login: Function,
     setRedirect: Function,
@@ -76,10 +75,7 @@ class Login extends Component<PropsInterface> {
             { isLoading: true }
         ).subscribe(
             (response: any) => {
-                this.props.login({
-                    status: response.data.status,
-                    token: response.data.token,
-                });
+                this.props.login(response.data.token);
             },
             error => {
                 try {
@@ -186,9 +182,9 @@ class Login extends Component<PropsInterface> {
                     <span className="mr-2">&copy;</span>
                     <span>2020</span>
                     <span className="mx-2">-</span>
-                    <span>Angle</span>
+                    <span>LiftU</span>
                     <br/>
-                    <span>Bootstrap Admin Template</span>
+                    <span>Copyright © 2020 LiftU. All Rights Reserved</span>
                 </div>
             </div>
         );
@@ -204,7 +200,7 @@ const stateToProps = (state: any) => {
 };
 
 const dispatchToProps = (dispatch: Dispatch) => ({
-    login: (response: ResponseLogin) => dispatch(loginAction(response)),
+    login: (token: string) => dispatch(loginAction(token)),
     setRedirect: (url: string) => dispatch(setRedirect(url)),
     dispatch
 });

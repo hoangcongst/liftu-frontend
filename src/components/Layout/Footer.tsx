@@ -6,7 +6,7 @@ class Footer extends Component {
         const year = new Date().getFullYear()
         return (
             <footer className="footer-container">
-                <span>&copy; {year} - Angle</span>
+                <span>Copyright &copy; {year} LiftU All Rights Reserved</span>
             </footer>
         );
     }

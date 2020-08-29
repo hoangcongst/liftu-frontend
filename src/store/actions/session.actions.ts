@@ -13,14 +13,9 @@ export interface Session {
     token: string
 }
 
-export interface ResponseLogin {
-    status: number,
-    token?: string
-}
-
 interface LoginAction {
     type: typeof LOGIN,
-    response: ResponseLogin
+    token: string
 }
 
 interface LogoutAction {
@@ -35,8 +30,8 @@ interface SetRedirectAction {
 
 export type SessionAction = LoginAction | LogoutAction | SetRedirectAction
 
-export function loginAction(response: ResponseLogin): SessionAction {
-    return { type: LOGIN, response };
+export function loginAction(token: string): SessionAction {
+    return { type: LOGIN, token };
 }
 
 export function logoutAction(name: string): SessionAction {

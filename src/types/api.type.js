@@ -4,6 +4,7 @@ export const API_COMMAND = {
     SIGNIN: { method: 'POST', url: '/login' },
     SIGNOUT: { method: 'POST', url: '/signout' },
 
-    POST_READ: { method: 'GET', url: '/posts' },
+    POST_INDEX: { method: 'GET', url: '/posts' },
+    POST_SHOW: { method: 'GET', url: '/default/posts/[postId]' },
     POST_CREATE: { method: 'POST', url: '/posts' },
 }

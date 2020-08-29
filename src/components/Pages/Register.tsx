@@ -160,9 +160,9 @@ class Register extends Component {
                     <span className="mr-2">&copy;</span>
                     <span>2020</span>
                     <span className="mx-2">-</span>
-                    <span>Angle</span>
+                    <span>LiftU</span>
                     <br/>
-                    <span>Bootstrap Admin Template</span>
+                    <span>Copyright © 2020 LiftU. All Rights Reserved</span>
                 </div>
             </div>
         );
