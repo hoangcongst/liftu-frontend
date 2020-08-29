@@ -3,6 +3,8 @@ import ContentWrapper from '../Layout/ContentWrapper';
 import {Row, Col, Card, CardHeader, CardBody, CardColumns} from 'reactstrap';
 import ApiHelper from "../../helpers/api.helper";
 import {API_COMMAND} from "../../types/api.type";
+import {Link} from "react-router-dom";
+// import {withRouter} from 'react-router';
 
 class BlogList extends Component {
 
@@ -22,7 +24,7 @@ class BlogList extends Component {
         ).subscribe(
             (response: any) => {
                 this.setState({
-                    posts: response.data._embedded.posts
+                    posts: response.data.data.content
                 })
             }
         );
@@ -38,16 +40,16 @@ class BlogList extends Component {
                             {
                                 this.state.posts.map((post: any) => {
                                     return <Card key={post.id}>
-                                        <a href="">
+                                        <Link to="/blog-post" >
                                             <img className="img-fluid" src="img/bg1.jpg" alt="Demo"/>
-                                        </a>
+                                        </Link>
                                         <CardBody>
                                             <p className="d-flex">
                                         <span>
                                             <small className="mr-1">By
-                                                <a className="ml-1" href="">Erica Castro</a>
+                                                <a className="ml-1" href="">{post.username}</a>
                                             </small>
-                                            <small className="mr-1">{post.created_at}</small>
+                                            <small className="mr-1">{post.createdAt}</small>
                                         </span>
                                                 <span className="ml-auto">
                                             <small>
@@ -57,7 +59,7 @@ class BlogList extends Component {
                                         </span>
                                             </p>
                                             <h4>
-                                                <a href="">{post.title}</a>
+                                                <Link to="/blog-post">{post.title}</Link>
                                             </h4>
                                             <p>{post.description!}</p>
                                         </CardBody>
