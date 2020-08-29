@@ -65,7 +65,7 @@ const ApiHelper = {
   },
 
   _checkExpired(response: any) {
-    const { status, data: { errors } } = response;
+    const { status, message } = response;
     let errorCode: string = 'serverError';
 
     if (_.isEmpty(response)) {
@@ -73,25 +73,7 @@ const ApiHelper = {
     }
 
     if (status === 401) {
-      const { code } = errors[0];
-      if (code === '9012') {
-        errorCode = 'passwordNeedChange';
-      } else if (code === '9002') {
-        errorCode = 'sessionExpired';
-      } else {
-        return errorCode;
-      }
-    }
-
-    if (status === 403 && errors) {
-      const { code } = errors[0];
-      if (code === '9004') {
-        errorCode = 'forceLogout';
-        CommonHelper.sendMessage(errorCode);
-      } else if (['9001', '9003'].includes(code)) {
-        errorCode = 'sessionExpired';
-        CommonHelper.sendMessage(errorCode);
-      }
+      return message
     }
 
     return errorCode;

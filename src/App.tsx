@@ -39,29 +39,14 @@ class App extends Component<PropsApp> {
     }
 
     _checkAuth = () => {
-        if (this.props.authenticated && !CommonHelper.getToken()) {
-            this.props.logout!({
-                callback: () => {
-                    window.location.href = '/';
-                }
-            });
-            return;
-        }
-
-        if (!this.props.authenticated && !_.isEmpty(CommonHelper.getToken()) && !_.isEmpty(CommonHelper.getCookie('userId'))) {
-            // ApiHelper.request(API_COMMAND.USERS_DETAIL, {}, {}, {id: CommonHelper.getCookie('userId')}).subscribe(
-            //     (response) => {
-            //         this.props.login({
-            //             token: CommonHelper.getToken(),
-            //             userData: response.data,
-            //             saveId: ''
-            //         });
-            //     },
-            //     () => {
-            //         this._initApp();
+        if (_.isEmpty(CommonHelper.getToken())) {
+            // this.props.logout!({
+            //     callback: () => {
+            //         window.location.href = '/';
             //     }
-            // );
-        } else {
+            // });
+            // return;
+        
             this._initApp();
         }
     };
@@ -71,7 +56,7 @@ class App extends Component<PropsApp> {
     };
 
     _moveUserPage = () => {
-        if (!this.props.authenticated && this.props.location.pathname !== '/login') {
+        if (this.props.location.pathname !== '/login') {
             this.props.history.push('/login');
         }
     };

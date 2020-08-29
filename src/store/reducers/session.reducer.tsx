@@ -6,14 +6,15 @@ import {
     Session,
     SessionAction,
     UPDATE_TOKEN,
-    UPDATE_USER
+    UPDATE_USER,
+    SET_REDIRECT_URL
 } from '../actions/session.actions'
 import CommonHelper from "../../helpers/common.helper";
 import StorageHelper from "../../helpers/storage.helper";
 
 const login = (state: any, action: any) => {
-    const {status, token} = action.response;
-    if(status === LOGIN_SUCCESS) {
+    const { status, token } = action.response;
+    if (status === LOGIN_SUCCESS) {
         CommonHelper.setToken(token);
         return {
             ...state,
@@ -53,12 +54,23 @@ const initialState: Session = {
     token: ''
 }
 
+const redirectLogin = (state: any, action: any) => {
+    const { url } = action.response;
+    return {
+        ...state,
+        redirectUrl: url,
+    };
+}
+
+
 const sessionReducer = (state: Session = initialState, action: SessionAction): any => {
     switch (action.type) {
         case LOGIN:
             return login(state, action)
         case LOGOUT:
             return logout(state, action)
+        case SET_REDIRECT_URL:
+            return redirectLogin(state, action)
         default:
             return state;
     }

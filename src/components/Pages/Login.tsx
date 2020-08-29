@@ -1,18 +1,24 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { Input, CustomInput } from 'reactstrap';
+import {compose} from 'redux'
 
 import FormValidator from '../Forms/FormValidator';
 import ApiHelper from "../../helpers/api.helper";
 import {API_COMMAND} from "../../types/api.type";
 import _ from 'underscore'
 import {Dispatch} from "redux";
-import {LOGIN, loginAction, ResponseLogin} from "../../store/actions/session.actions";
+import {LOGIN, loginAction, ResponseLogin, setRedirect} from "../../store/actions/session.actions";
 
 interface PropsInterface {
     login: Function,
-    user: any
+    setRedirect: Function,
+    user: any,
+    location: any,
+    authenticated?: boolean,
+    history?: any,
+    redirectUrl?: string
 }
 class Login extends Component<PropsInterface> {
 
@@ -85,6 +91,17 @@ class Login extends Component<PropsInterface> {
         );
 
         e.preventDefault()
+    }
+
+    componentWillReceiveProps(newProps: any) {
+        if (newProps.authenticated === true) {
+            if (newProps.redirectUrl === "")
+                this.props.history.push("/")
+            else
+                this.props.history.push(this.props.redirectUrl)
+
+            this.props.setRedirect(null);
+        }
     }
 
     _loginError = (error: any) => {
@@ -181,17 +198,20 @@ class Login extends Component<PropsInterface> {
 const stateToProps = (state: any) => {
     return {
         authenticated: state.authenticated,
-        user: state.user
+        user: state.user,
+        redirectUrl: state.redirectUrl,
     };
 };
 
 const dispatchToProps = (dispatch: Dispatch) => ({
     login: (response: ResponseLogin) => dispatch(loginAction(response)),
+    setRedirect: (url: string) => dispatch(setRedirect(url)),
     dispatch
 });
 
-export default connect(
-    stateToProps,
-    dispatchToProps
-)(Login);
+const enhance = compose(
+    withRouter,
+    connect(stateToProps, dispatchToProps),
+)
 
+export default enhance(Login) as React.ComponentType<any>;

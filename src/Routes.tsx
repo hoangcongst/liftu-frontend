@@ -75,12 +75,11 @@ class Routes extends React.PureComponent<any, any> {
                                         <Route path="/table-standard" component={waitFor(TableStandard)}/>
                                         <Route path="/form-standard" component={waitFor(FormStandard)}/>
 
-                                        <Route path="/blog-list" component={waitFor(BlogList)}/>
+                                        <Route path="/home" component={waitFor(BlogList)}/>
                                         <Route path="/blog-post" component={waitFor(BlogPost)}/>
                                         <Route path="/blog-articles" component={waitFor(BlogArticle)}/>
                                         <Route path="/blog-article-view" component={waitFor(BlogEditor)}/>
-                                        
-                                        <Redirect to='/blog-list' />
+                                        <Redirect from="/" to="/home" exact /> 
                                     </Switch>
                                 </Suspense>
                             </div>
