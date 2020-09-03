@@ -20,7 +20,6 @@ import "./Vendor";
 // Application Styles
 import './styles/bootstrap.scss';
 import './styles/app.scss'
-import _ from 'underscore'
 
 interface PropsApp {
     location: any

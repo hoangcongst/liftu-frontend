@@ -57,7 +57,7 @@ class Login extends Component<PropsInterface> {
         const form = e.target;
         const inputs = [...form.elements].filter(i => ['INPUT', 'SELECT'].includes(i.nodeName))
 
-        const { errors, hasError } = FormValidator.bulkValidate(inputs)
+        const { errors } = FormValidator.bulkValidate(inputs)
 
         this.setState({
             [form.name]: {

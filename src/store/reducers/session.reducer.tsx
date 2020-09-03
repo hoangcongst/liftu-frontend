@@ -1,12 +1,8 @@
 import {
     LOGIN,
-    LOGIN_SUCCESS,
     LOGOUT,
-    RENEW_TOKEN,
     Session,
     SessionAction,
-    UPDATE_TOKEN,
-    UPDATE_USER,
     SET_REDIRECT_URL
 } from '../actions/session.actions'
 import CommonHelper from "../../helpers/common.helper";

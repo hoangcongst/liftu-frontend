@@ -10,7 +10,7 @@ interface apiCmd {
 }
 
 // @ts-ignore
-axios.defaults.baseURL = 'http://api-liftu.textap.me'
+axios.defaults.baseURL = 'http://api-liftu.textap.me/liftu'
 axios.defaults.timeout = 10000;
 
 let $loading: any;

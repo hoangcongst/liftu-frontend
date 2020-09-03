@@ -4,7 +4,7 @@ import {Row, Col, Card, Alert} from 'reactstrap';
 // React Select
 import Select from 'react-select';
 // React Draft Wysiwyg
-import {EditorState, ContentState, convertFromHTML, convertToRaw} from 'draft-js';
+import {EditorState, convertToRaw} from 'draft-js';
 import {Editor} from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import ApiHelper from '../../helpers/api.helper';
@@ -17,9 +17,6 @@ const CATEGORIES = [
 ]
 const TAGS = [
     {value: 'JAVASCRIPT', label: 'JAVASCRIPT'},
-]
-const REVIEWERS = [
-    {value: 'adam@email.com', label: 'adam@email.com'},
 ]
 
 class BlogEditor extends Component {

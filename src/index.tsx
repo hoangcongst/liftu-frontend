@@ -18,11 +18,10 @@ import {BrowserRouter} from "react-router-dom";
 import './i18n';
 
 const store = configureStore();
-const basename = process.env.NODE_ENV === 'development' ? '/' : ('http://localhost:8090' || '/');
 
 ReactDOM.render(
     <Provider store={store}>
-        <BrowserRouter basename={basename}>
+        <BrowserRouter>
             <App/>
         </BrowserRouter>
     </Provider>,
