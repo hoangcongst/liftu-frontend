@@ -26,7 +26,7 @@ jobs:
         if: github.ref == 'refs/heads/master'
         uses: garygrossgarten/github-action-scp@release
         with:
-          local: test
+          local: ${{ secrets.HOME_PATH }}
           remote: scp/directory
           host: ${{ secrets.HOST }}
           username: ${{ secrets.SSH_USER }}
