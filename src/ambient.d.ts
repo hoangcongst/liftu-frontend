@@ -1,6 +1,5 @@
 declare module 'react-select';
-declare module 'draft-js';
-declare module 'react-draft-wysiwyg';
 declare module 'validator';
 declare module 'underscore';
-declare module 'draftjs-to-html';
+declare module '@ckeditor/ckeditor5-react';
+declare module '@ckeditor/ckeditor5-build-classic';

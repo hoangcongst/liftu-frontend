@@ -1,22 +1,18 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import ContentWrapper from '../Layout/ContentWrapper';
-import {Row, Col, Card, Alert} from 'reactstrap';
+import { Row, Col, Card, Alert } from 'reactstrap';
 // React Select
 import Select from 'react-select';
-// React Draft Wysiwyg
-import {EditorState, convertToRaw} from 'draft-js';
-import {Editor} from 'react-draft-wysiwyg';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import ApiHelper from '../../helpers/api.helper';
-import {API_COMMAND} from "../../types/api.type";
-import draftToHtml from 'draftjs-to-html';
-
+import { API_COMMAND } from "../../types/api.type";
+import CKEditor from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const CATEGORIES = [
-    {value: 'coding', label: 'coding'},
+    { value: 'coding', label: 'coding' },
 ]
 const TAGS = [
-    {value: 'JAVASCRIPT', label: 'JAVASCRIPT'},
+    { value: 'JAVASCRIPT', label: 'JAVASCRIPT' },
 ]
 
 class BlogEditor extends Component {
@@ -25,25 +21,13 @@ class BlogEditor extends Component {
         categories: [],
         tags: [],
         reviewers: [],
-        editorState: EditorState.createEmpty(),
 
         post: {
             title: "",
             description: "",
             status: "",
+            content: ""
         }
-    }
-
-    componentDidMount() {
-        // // editor initial content
-        // const blocksFromHTML = convertFromHTML('<p>Write something...</p>');
-        // const initialEditorContent = ContentState.createFromBlockArray(
-        //     blocksFromHTML.contentBlocks,
-        //     blocksFromHTML.entityMap
-        // );
-        // this.setState({
-        //     editorState: EditorState.createWithContent(initialEditorContent)
-        // })
     }
 
     handleChangeSelect = (name: string, newVal: any) => {
@@ -52,8 +36,13 @@ class BlogEditor extends Component {
         });
     }
 
-    onEditorStateChange = (editorState: object) => {
-        this.setState({editorState})
+    onEditorStateChange = (event: any, editor: any) => {
+        this.setState({
+            post: {
+                ...this.state.post,
+                content: editor.getData()
+            }
+        })
     }
 
     handleTitleChange = (event: any) => {
@@ -75,16 +64,15 @@ class BlogEditor extends Component {
     }
 
     _onSubmit = () => {
-        console.log(draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())))
         ApiHelper.request(
             API_COMMAND.POST_CREATE,
             {
                 title: this.state.post.title,
-                content: draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())),
+                content: this.state.post.content,
                 status: this.state.post.status,
                 description: this.state.post.description
             },
-            {isLoading: true}
+            { isLoading: true }
         ).subscribe(
             (response: any) => {
 
@@ -104,10 +92,10 @@ class BlogEditor extends Component {
             <ContentWrapper>
                 <div className="content-heading">New Article</div>
                 <Alert color="info">
-                    <em className="fa fa-exclamation-circle fa-lg fa-fw"/>
+                    <em className="fa fa-exclamation-circle fa-lg fa-fw" />
                     <span>There is an autosaved version of this article that is more recent than the version below. <a
                         href="" className="text-white">Restore</a>
-                   </span>
+                    </span>
                 </Alert>
                 <Row>
                     { /* Article Content */}
@@ -115,31 +103,36 @@ class BlogEditor extends Component {
                         <Card body className="card-default">
                             <form action="">
                                 <input value={this.state.post.title} onChange={this.handleTitleChange} type="text"
-                                       name="article-title" placeholder="Article title..."
-                                       className="mb-3 form-control form-control-lg"/>
-                                <Editor
-                                    editorState={this.state.editorState}
-                                    wrapperClassName="wysiwig-editor-wrapper"
-                                    editorClassName="form-control"
-                                    editorStyle={{height: 300}}
-                                    onEditorStateChange={this.onEditorStateChange}
+                                    name="article-title" placeholder="Article title..."
+                                    className="mb-3 form-control form-control-lg" />
+                                <CKEditor
+                                    editor={ ClassicEditor }
+                                    data={this.state.post.content}
+                                    onInit={(editor: any) => {
+                                        // Insert the toolbar before the editable area.
+                                        editor.ui.getEditableElement().parentElement.insertBefore(
+                                            editor.ui.view.toolbar.element,
+                                            editor.ui.getEditableElement()
+                                        );
+                                    }}
+                                    onChange={this.onEditorStateChange}
                                 />
-                                <br/>
+                                <br />
                                 <p>Notes</p>
-                                <textarea cols={6} className="mb-3 form-control"/>
+                                <textarea cols={6} className="mb-3 form-control" />
                                 <div className="clearfix">
                                     <div className="float-left">
                                         <button type="button" className="btn btn-secondary">
-                                            <em className="fa fa-edit fa-fw"/>Draft
+                                            <em className="fa fa-edit fa-fw" />Draft
                                         </button>
                                         <button type="button" className="btn btn-primary m-t-10"
-                                                onClick={() => this._onSubmit()}>
-                                            <em className="fa fa-check fa-fw"/>Save
+                                            onClick={() => this._onSubmit()}>
+                                            <em className="fa fa-check fa-fw" />Save
                                         </button>
                                     </div>
                                     <div className="float-right">
                                         <button type="button" className="btn btn-danger">
-                                            <em className="fas fa-trash-alt fa-fw"/>Remove
+                                            <em className="fas fa-trash-alt fa-fw" />Remove
                                         </button>
                                     </div>
                                 </div>
@@ -171,17 +164,17 @@ class BlogEditor extends Component {
                             <p className="lead mt-3">SEO Metadata</p>
                             <div className="form-group">
                                 <p>Title</p>
-                                <input type="text" placeholder="Brief description.." className="form-control"/>
+                                <input type="text" placeholder="Brief description.." className="form-control" />
                             </div>
                             <div className="form-group">
                                 <p>Description</p>
                                 <textarea rows={5}
-                                          placeholder="Max 255 characters..." className="form-control"
-                                          value={this.state.post.description} onChange={this.handleDescriptionChange} />
+                                    placeholder="Max 255 characters..." className="form-control"
+                                    value={this.state.post.description} onChange={this.handleDescriptionChange} />
                             </div>
                             <div className="form-group">
                                 <p>Keywords</p>
-                                <textarea rows={5} placeholder="Max 1000 characters..." className="form-control"/>
+                                <textarea rows={5} placeholder="Max 1000 characters..." className="form-control" />
                             </div>
                         </Card>
                     </Col>
