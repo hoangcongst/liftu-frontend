@@ -10,12 +10,12 @@ import {API_COMMAND} from "../../types/api.type";
 import {Dispatch} from "redux";
 
 import {loginAction, setRedirect} from "../../store/actions/session.actions";
+
 interface PropsInterface {
     login: Function,
     setRedirect: Function,
     user: any,
     location: any,
-    authenticated?: boolean,
     history?: any,
     redirectUrl?: string
 }
@@ -76,6 +76,7 @@ class Login extends Component<PropsInterface> {
         ).subscribe(
             (response: any) => {
                 this.props.login(response.data.token);
+                this.props.history.push("/")
             },
             error => {
                 try {
@@ -87,17 +88,6 @@ class Login extends Component<PropsInterface> {
         );
 
         e.preventDefault()
-    }
-
-    componentWillReceiveProps(newProps: any) {
-        if (newProps.authenticated === true) {
-            if (newProps.redirectUrl === "")
-                this.props.history.push("/")
-            else
-                this.props.history.push(this.props.redirectUrl)
-
-            this.props.setRedirect(null);
-        }
     }
 
     _loginError = (error: any) => {
@@ -193,9 +183,8 @@ class Login extends Component<PropsInterface> {
 
 const stateToProps = (state: any) => {
     return {
-        authenticated: state.authenticated,
         user: state.user,
-        redirectUrl: state.redirectUrl,
+        redirectUrl: state.session.redirectUrl,
     };
 };
 

@@ -6,12 +6,18 @@ import { ApplicationState } from '../../store/store';
 import { changeSetting, SettingState, changeTheme, ThemeState } from '../../store/actions/actions';
 
 import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
+import CommonHelper from '../../helpers/common.helper';
+import StorageHelper from '../../helpers/storage.helper';
+import { withRouter } from 'react-router-dom';
+import { logoutAction } from '../../store/actions/session.actions';
 
 export interface OffsidebarProps {
     changeSetting: typeof changeSetting,
     settings: SettingState,
     changeTheme: typeof changeTheme,
-    theme: ThemeState
+    theme: ThemeState,
+    history: any,
+    logOut: Function
 };
 
 
@@ -43,6 +49,13 @@ class Offsidebar extends Component<OffsidebarProps> {
     handleThemeRadio = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.props.changeTheme(event.target.value);
     };
+
+    logOut = () => {
+        CommonHelper.clearToken()
+        StorageHelper.clear()
+        this.props.logOut()
+        this.props.history.push("/")
+    }
 
     render() {
 
@@ -91,36 +104,6 @@ class Offsidebar extends Component<OffsidebarProps> {
                                             </div>
                                             <div className="ml-auto">
                                                 <span className="circle bg-success circle-lg"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="list-group-item list-group-item-action border-0">
-                                        <div className="media">
-                                            <img className="align-self-center mr-3 rounded-circle thumb48" src="img/user/06.jpg" alt="User avatar" />
-                                            <div className="media-body text-truncate">
-                                                <a href="">
-                                                    <strong>Maureen Jenkins</strong>
-                                                </a>
-                                                <br />
-                                                <small className="text-muted">Designeer</small>
-                                            </div>
-                                            <div className="ml-auto">
-                                                <span className="circle bg-success circle-lg"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="list-group-item list-group-item-action border-0">
-                                        <div className="media">
-                                            <img className="align-self-center mr-3 rounded-circle thumb48" src="img/user/07.jpg" alt="User avatar" />
-                                            <div className="media-body text-truncate">
-                                                <a href="">
-                                                    <strong>Billie Dunn</strong>
-                                                </a>
-                                                <br />
-                                                <small className="text-muted">Designeer</small>
-                                            </div>
-                                            <div className="ml-auto">
-                                                <span className="circle bg-danger circle-lg"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -177,8 +160,8 @@ class Offsidebar extends Component<OffsidebarProps> {
                                 </div>
                                 <div className="px-3 py-4 text-center">
                                     { /* Optional link to list more users */}
-                                    <a className="btn btn-purple btn-sm" href="" title="See more contacts">
-                                        <strong>Load more..</strong>
+                                    <a className="btn btn-danger btn-sm" onClick={this.logOut} title="Logout">
+                                        <strong>Logout</strong>
                                     </a>
                                 </div>
                                 { /* Extra items */}
@@ -397,10 +380,11 @@ class Offsidebar extends Component<OffsidebarProps> {
 const mapStateToProps = (state: ApplicationState) => ({ settings: state.settings, theme: state.theme })
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     changeTheme: bindActionCreators(changeTheme, dispatch),
-    changeSetting: bindActionCreators(changeSetting, dispatch)
+    changeSetting: bindActionCreators(changeSetting, dispatch),
+    logOut: () => dispatch(logoutAction()),
 })
 
-export default connect(
+export default withRouter(connect(
     mapStateToProps,
     mapDispatchToProps
-)(Offsidebar);
+)(Offsidebar) as React.ComponentClass<any>);

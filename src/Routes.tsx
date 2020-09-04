@@ -91,7 +91,6 @@ class Routes extends React.PureComponent<any, any> {
 
 const stateToProps = (state: any) => {
     return {
-        authenticated: state.session.authenticated,
     };
 };
 

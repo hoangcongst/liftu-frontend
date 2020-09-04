@@ -1,16 +1,16 @@
 import React from 'react';
 import { Route, Redirect, RouteProps } from 'react-router';
 import { connect } from 'react-redux';
+import CommonHelper from './helpers/common.helper';
 
 interface PropsType extends RouteProps {
-    authenticated?: boolean;
     roles?: number[],
     role?: number,
 }
 
 class PrivateRoute extends React.Component<PropsType, any> {
     render() {
-        if (this.props.authenticated && this.props.role) {
+        if (CommonHelper.getToken() && this.props.role) {
             if (!this.props.roles || !this.props.roles.length) {
                 return <Route {...this.props} />
             }
@@ -25,7 +25,6 @@ class PrivateRoute extends React.Component<PropsType, any> {
 
 const stateToProps = (state: any) => {
     return {
-        authenticated: state.session.authenticated,
         role: 1,
     };
 };

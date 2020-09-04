@@ -6,7 +6,6 @@ import {
     SET_REDIRECT_URL
 } from '../actions/session.actions'
 import CommonHelper from "../../helpers/common.helper";
-import StorageHelper from "../../helpers/storage.helper";
 
 const login = (state: any, action: any) => {
     const { token } = action;
@@ -14,39 +13,15 @@ const login = (state: any, action: any) => {
         CommonHelper.setToken(token);
         return {
             ...state,
-            authenticated: true,
         };
     } else return state
 }
 
 const logout = (state: any, action: any) => {
-    // sessionService.deleteUser().then(() => {
-    //     sessionService.deleteSession().then(() => {
-    //         const saveId = StorageHelper.get('saveId');
-    //
-    //         CommonHelper.clearToken();
-    //
-    //         StorageHelper.clear();
-    //
-    //         if (saveId) {
-    //             StorageHelper.set('saveId', saveId);
-    //         }
-    //
-    //         const {callback} = action.payload;
-    //         if (callback) {
-    //             callback();
-    //         }
-    //     });
-    // });
-
-    return StorageHelper.save('session', {
-        ...state,
-        tokenHash: {}
-    });
+    return state
 }
 
 const initialState: Session = {
-    authenticated: false,
     token: ''
 }
 

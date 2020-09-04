@@ -15,7 +15,7 @@ const StorageHelper = {
   },
 
   clear () {
-
+    return localStorage.clear()
   },
 
   remove (key: string) {

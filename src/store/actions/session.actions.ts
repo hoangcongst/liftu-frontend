@@ -9,7 +9,6 @@ export const LOGIN_SUCCESS=0
 export const LOGIN_FAILED=1
 
 export interface Session {
-    authenticated: boolean,
     token: string
 }
 
@@ -19,8 +18,7 @@ interface LoginAction {
 }
 
 interface LogoutAction {
-    type: typeof LOGOUT,
-    name: string
+    type: typeof LOGOUT
 }
 
 interface SetRedirectAction {
@@ -34,8 +32,8 @@ export function loginAction(token: string): SessionAction {
     return { type: LOGIN, token };
 }
 
-export function logoutAction(name: string): SessionAction {
-    return { type: LOGOUT, name };
+export function logoutAction(): SessionAction {
+    return { type: LOGOUT };
 }
 
 //get url of a guest access to site and set to state.redirectUrl

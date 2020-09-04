@@ -4,7 +4,7 @@ const initialSettings: SettingState = {
     /* Layout fixed. Scroll content only */
     isFixed: true,
     /* Sidebar collapsed */
-    isCollapsed: false,
+    isCollapsed: true,
     /* Boxed layout */
     isBoxed: false,
     /* Floating sidebar */
