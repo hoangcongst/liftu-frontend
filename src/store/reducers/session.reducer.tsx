@@ -6,8 +6,6 @@ import {
     SET_REDIRECT_URL,
     INFO_USER
 } from '../actions/session.actions'
-import CommonHelper from "../../helpers/common.helper";
-
 const login = (state: any, action: any) => {
     const { exprired } = action;
     if (exprired) {

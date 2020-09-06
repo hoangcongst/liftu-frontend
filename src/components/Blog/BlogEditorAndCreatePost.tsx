@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ContentWrapper from '../Layout/ContentWrapper';
-import { Row, Col, Card, Alert } from 'reactstrap';
+import { Row, Col, Card } from 'reactstrap';
 // React Select
 import Select from 'react-select';
 import ApiHelper from '../../helpers/api.helper';
