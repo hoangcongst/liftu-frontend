@@ -8,8 +8,6 @@ import { toggleSetting } from '../../store/actions/actions';
 
 import ToggleFullscreen from '../Common/ToggleFullscreen';
 import HeaderSearch from './HeaderSearch';
-import CommonHelper from '../../helpers/common.helper';
-
 type HeaderProps = {
     toggleSetting: typeof toggleSetting,
     exprired: string,
