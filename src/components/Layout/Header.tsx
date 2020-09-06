@@ -70,7 +70,7 @@ class Header extends Component<HeaderProps> {
                 <nav className="navbar topnavbar">
                     { /* START navbar header */}
                     <div className="navbar-header">
-                        <a className="navbar-brand" href="#/">
+                        <a className="navbar-brand" href="/">
                             <div className="brand-logo">
                                 <img className="img-fluid" src="/img/logo.png" alt="App Logo" />
                             </div>
