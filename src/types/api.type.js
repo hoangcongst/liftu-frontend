@@ -8,4 +8,6 @@ export const API_COMMAND = {
     POST_SHOW:   { method: 'GET',  url: '/posts/[postId]' },
     POST_CREATE: { method: 'POST', url: '/posts' },
     EDIT_POST:   { method: 'PUT', url: '/posts/[postId]' },
+
+    COMMENT_INDEX:  { method: 'GET',  url: '/comments' },
 }

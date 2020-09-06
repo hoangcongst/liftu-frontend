@@ -4,10 +4,10 @@ import { Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
 import ApiHelper from '../../helpers/api.helper';
 import { API_COMMAND } from '../../types/api.type';
 import { connect } from 'react-redux';
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 interface Props {
     match: any,
-    user: Object
+    user: any
 }
 
 class BlogPost extends Component<Props, any> {
@@ -15,44 +15,47 @@ class BlogPost extends Component<Props, any> {
     state = {
         //Create an array of word objects, each representing a word in the cloud
         word_array: [
-            { text: 'Lorem', weight: 13 /*link: 'http://themicon.co'*/ },
-            { text: 'Ipsum', weight: 10.5 },
-            { text: 'Dolor', weight: 9.4 },
-            { text: 'Sit', weight: 8 },
-            { text: 'Amet', weight: 6.2 },
-            { text: 'Consectetur', weight: 5 },
-            { text: 'Adipiscing', weight: 5 },
-            { text: 'Sit', weight: 8 },
-            { text: 'Amet', weight: 6.2 },
-            { text: 'Consectetur', weight: 5 },
-            {
-                text: 'Adipiscing', weight: 5
-            }],
+            { text: 'Lorem', weight: 13 }
+        ],
         post: {
             title: "",
             content: "",
             created_at: "",
-            user: {}
+            numberComment: 0,
+            user: {
+                display_name: "",
+                id: 0
+            }
         },
+        comments: [],
         postId: '',
     }
-    
+
 
     loadPost(postId: number) {
         ApiHelper.request(
             API_COMMAND.POST_SHOW,
             {},
-            {isLoading: true},
+            { isLoading: true },
             { postId: postId }
         ).subscribe(
             (response: any) => {
                 this.setState({
-                    post: {
-                        title: response.data.data.title,
-                        content: response.data.data.content,
-                        created_at: response.data.data.created_at,
-                        user: response.data.data.user
-                    }
+                    post: response.data.data
+                })
+            }
+        );
+    }
+
+    loadComments(postId: number, parentCommentId: number) {
+        ApiHelper.request(
+            API_COMMAND.COMMENT_INDEX,
+            { post_id: postId, parent_comment_id: parentCommentId },
+            { isLoading: true },
+        ).subscribe(
+            (response: any) => {
+                this.setState({
+                    comments: response.data.content
                 })
             }
         );
@@ -65,6 +68,7 @@ class BlogPost extends Component<Props, any> {
         });
         if (postId) {
             this.loadPost(postId)
+            this.loadComments(postId, 0)
         }
     }
 
@@ -76,39 +80,35 @@ class BlogPost extends Component<Props, any> {
                     <Col xl="9">
                         <Card className="card-default">
                             <CardHeader>
-                                
+
                                 <div className="bb">
 
-                                    <h2 className="text-lg mt-3">{this.state.post.title}</h2>
+                                    <h2 className="text-md mt-3">{this.state.post.title + " "}
+                                        {
+                                            (this.props.user.id === this.state.post.user.id) &&
+                                            <Link to={"/edit-post/" + this.state.postId} >
+                                                <em className="fa fa-edit text-muted" />
+                                            </Link>
+                                        }
+                                    </h2>
                                     <p className="d-flex">
                                         <span>
                                             <small className="mr-1">By
-                                                <a className="ml-1" href="">Erica Castro</a>
+                                                <a className="ml-1" href="">{this.state.post.user.display_name}</a>
                                             </small>
                                             <small className="mr-1">{this.state.post.created_at}</small>
-                                            <small className="mr-1">
-                                                {
-                                                    // @ts-ignore
-                                                    (this.props.user.id === this.state.post.user.id) &&
-                                                   
-                                                        <Link to={"/edit-post/" + this.state.postId} >
-                                                             <em className="fa fa-edit text-muted" /> 
-                                                        </Link>  
-                                                }
-                                                
-                                            </small>
                                         </span>
                                         <span className="ml-auto">
                                             <small>
-                                                <strong>56</strong>
-                                                <span>Comments</span>
+                                                <strong>{this.state.post.numberComment}</strong>
+                                                <span> Comments</span>
                                             </small>
                                         </span>
                                     </p>
                                 </div>
                             </CardHeader>
-                            <CardBody className="text-md">
-                                <div dangerouslySetInnerHTML={{__html: this.state.post.content}} />
+                            <CardBody>
+                                <div dangerouslySetInnerHTML={{ __html: this.state.post.content }} />
                                 <hr className="my-4" />
                                 <div className="btn-group" role="group" aria-label="...">
                                     <button className="btn btn-secondary" type="button">
@@ -121,32 +121,34 @@ class BlogPost extends Component<Props, any> {
                                         <em className="fab fa-google-plus-g text-muted" />
                                     </button>
                                     <button className="btn btn-secondary" type="button">
-                                        <em className="fa fa-tumblr text-muted" />
-                                    </button>
-                                    <button className="btn btn-secondary" type="button">
-                                        <em className="fa fa-pinterest text-muted" />
-                                    </button>
-                                    <button className="btn btn-secondary" type="button">
                                         <em className="fa fa-share-alt text-muted" />
                                     </button>
                                 </div>
                             </CardBody>
                         </Card>
                         <Card>
-                            <CardHeader>3 Comments</CardHeader>
+                            <CardHeader>{this.state.post.numberComment} Comments</CardHeader>
                             <CardBody>
-                                <div className="media">
-                                    <img className="mr-3 rounded-circle thumb64" src="img/user/01.jpg" alt="Demo" />
-                                    <div className="media-body">
-                                        <h4 id="media-heading">
-                                            <a href="">Susan Grant</a>
-                                            <small> 10 min</small>
-                                        </h4>
-                                        <p>Donec ac massa tortor. In hac habitasse platea dictumst. Nam blandit fringilla faucibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae nisi eget metus semper congue.</p>
-                                        <p>Fusce ullamcorper placerat tortor, placerat consequat diam cursus posuere.</p>
-                                    </div>
-                                </div>
-                                <hr />
+                                {
+                                    this.state.comments.map(
+                                        (comment: any) => (
+                                            <>
+                                                <div className="media">
+                                                    <img className="mr-3 rounded-circle thumb64" src="img/user/01.jpg" alt="Demo" />
+                                                    <div className="media-body">
+                                                        <h4 id="media-heading">
+                                                            <a href="">{comment.user.display_name}</a>
+                                                            <small> {comment.created_at}</small>
+                                                        </h4>
+                                                        <p>{comment.content}</p>
+                                                    </div>
+                                                </div>
+                                                <hr />
+                                            </>
+                                        )
+                                    )
+                                }
+
                                 <div className="media">
                                     <img className="mr-3 rounded-circle thumb64" src="img/user/03.jpg" alt="Demo" />
                                     <div className="media-body mb-3">
@@ -173,14 +175,6 @@ class BlogPost extends Component<Props, any> {
                             </CardHeader>
                             <CardBody>
                                 <form className="form-horizontal" action="/">
-                                    <div className="form-group row">
-                                        <Col xs="6">
-                                            <input className="form-control" id="post-firstname" type="text" name="post-firstname" placeholder="Your firstname" />
-                                        </Col>
-                                        <Col xs="6">
-                                            <input className="form-control" id="post-lastname" type="text" name="post-lastname" placeholder="Your lastname" />
-                                        </Col>
-                                    </div>
                                     <div className="form-group row">
                                         <Col xs="12">
                                             <textarea className="form-control" id="post-comment" name="post-comment" rows={4} placeholder="Comment here.." />

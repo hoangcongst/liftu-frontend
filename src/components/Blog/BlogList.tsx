@@ -40,26 +40,26 @@ class BlogList extends Component {
                             {
                                 this.state.posts.map((post: any) => {
                                     return <Card key={post.id}>
-                                        <Link to={"/posts/" + post.id} >
+                                        <Link to={"/posts/" + post.id + "/" + post.alias} >
                                             <img className="img-fluid" src="img/bg1.jpg" alt="Demo"/>
                                         </Link>
                                         <CardBody>
                                             <p className="d-flex">
                                         <span>
                                             <small className="mr-1">By
-                                                <a className="ml-1" href="">{post.username}</a>
+                                                <a className="ml-1" href="">{post.displayName}</a>
                                             </small>
                                             <small className="mr-1">{post.createdAt}</small>
                                         </span>
                                                 <span className="ml-auto">
                                             <small>
-                                                <strong>56</strong>
+                                                <strong>{post.numberComment}</strong>
                                                 <span> Comments</span>
                                             </small>
                                         </span>
                                             </p>
                                             <h4 className="title-post-ellipsis">
-                                                <Link to={"/posts/" + post.id}>{post.title}</Link>
+                                                <Link to={"/posts/" + post.id + "/" + post.alias}>{post.title}</Link>
                                             </h4>
                                             <p>{post.description!}</p>
                                         </CardBody>
