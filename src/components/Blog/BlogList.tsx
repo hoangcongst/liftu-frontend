@@ -30,7 +30,7 @@ class BlogList extends Component {
     loadPosts() {
         let reqParams: any = {
             page: this.state.page - 1,
-            size: 5,
+            size: 12,
         };
         ApiHelper.request(
             API_COMMAND.POST_INDEX,
