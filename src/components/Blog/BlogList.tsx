@@ -84,9 +84,7 @@ class BlogList extends Component {
                             }
 
                         </CardColumns>
-                        <div>
-                            <Pagination page={this.state.page} total={this.state.total} listNum={5} goPage={this._goPage}/>
-                        </div>
+                        <Pagination page={this.state.page} total={this.state.total} listNum={12} goPage={this._goPage}/>
                     </Col>
                     {/* Blog Sidebar */}
                     <Col xl="3">
