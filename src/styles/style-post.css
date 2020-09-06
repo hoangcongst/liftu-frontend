@@ -1,0 +1,10 @@
+.title-post-ellipsis {
+    white-space: nowrap;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.topnavbar .navbar-nav > .nav-item > .nav-link:hover {
+    color: black;
+}

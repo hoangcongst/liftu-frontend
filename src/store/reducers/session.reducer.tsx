@@ -3,26 +3,45 @@ import {
     LOGOUT,
     Session,
     SessionAction,
-    SET_REDIRECT_URL
+    SET_REDIRECT_URL,
+    INFO_USER
 } from '../actions/session.actions'
 import CommonHelper from "../../helpers/common.helper";
 
 const login = (state: any, action: any) => {
-    const { token } = action;
-    if (token) {
-        CommonHelper.setToken(token);
+    const { exprired } = action;
+    if (exprired) {
         return {
             ...state,
+            exprired,
         };
     } else return state
 }
 
 const logout = (state: any, action: any) => {
-    return state
+    const { exprired, user } = action;
+
+    return {
+        ...state,
+        exprired,
+        user
+    };
+}
+
+const infoUser = (state: any, action: any) => {
+    const { user } = action;
+    if (user) {
+        return {
+            ...state,
+            user,
+        };
+    } else return state
 }
 
 const initialState: Session = {
-    token: ''
+    token: '',
+    exprired: '',
+    user: {}
 }
 
 const redirectLogin = (state: any, action: any) => {
@@ -42,6 +61,8 @@ const sessionReducer = (state: Session = initialState, action: SessionAction): a
             return logout(state, action)
         case SET_REDIRECT_URL:
             return redirectLogin(state, action)
+        case INFO_USER:
+            return infoUser(state, action)
         default:
             return state;
     }

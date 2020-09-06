@@ -21,7 +21,7 @@ const FormStandard = lazy(() => import('./components/Forms/FormStandard'));
 const BlogList = lazy(() => import('./components/Blog/BlogList'));
 const BlogPost = lazy(() => import('./components/Blog/BlogPost'));
 const BlogArticle = lazy(() => import('./components/Blog/BlogArticles'));
-const BlogEditor = lazy(() => import('./components/Blog/BlogEditor'));
+const BlogEditorAndCreatePost = lazy(() => import('./components/Blog/BlogEditorAndCreatePost'));
 
 const Login = lazy(() => import('./components/Pages/Login'));
 // List of routes that uses the page layout
@@ -77,7 +77,7 @@ class Routes extends React.PureComponent<any, any> {
                                         <Route path="/home" component={waitFor(BlogList)} />
                                         <PrivateRoute roles={[1, 2]} path="/posts/:postId?" component={waitFor(BlogPost)} />
                                         <PrivateRoute roles={[1, 4]} path="/blog-articles" component={waitFor(BlogArticle)} />
-                                        <PrivateRoute roles={[1, 3]} path="/edit-post" component={waitFor(BlogEditor)} />
+                                        <PrivateRoute roles={[1, 3]} path="/edit-post/:postId?" component={waitFor(BlogEditorAndCreatePost)} />
                                     </Switch>
                                 </Suspense>
                             </div>

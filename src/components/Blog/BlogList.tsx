@@ -5,7 +5,7 @@ import ApiHelper from "../../helpers/api.helper";
 import {API_COMMAND} from "../../types/api.type";
 import {Link} from "react-router-dom";
 // import {withRouter} from 'react-router';
-
+import '../../styles/style-post.css';
 class BlogList extends Component {
 
     state = {
@@ -58,7 +58,7 @@ class BlogList extends Component {
                                             </small>
                                         </span>
                                             </p>
-                                            <h4>
+                                            <h4 className="title-post-ellipsis">
                                                 <Link to={"/posts/" + post.id}>{post.title}</Link>
                                             </h4>
                                             <p>{post.description!}</p>

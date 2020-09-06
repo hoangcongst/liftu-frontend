@@ -51,10 +51,17 @@ class Offsidebar extends Component<OffsidebarProps> {
     };
 
     logOut = () => {
-        CommonHelper.clearToken()
-        StorageHelper.clear()
-        this.props.logOut()
-        this.props.history.push("/")
+        CommonHelper.clearToken();
+        StorageHelper.clear();
+        this.props.logOut({
+            exprired: '',
+            user: {}
+        });
+        this.setState({
+            offsidebarReady: false
+        });
+        
+        this.props.history.push("/");
     }
 
     render() {
@@ -381,7 +388,7 @@ const mapStateToProps = (state: ApplicationState) => ({ settings: state.settings
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     changeTheme: bindActionCreators(changeTheme, dispatch),
     changeSetting: bindActionCreators(changeSetting, dispatch),
-    logOut: () => dispatch(logoutAction()),
+    logOut: (logout: object) => dispatch(logoutAction(logout)),
 })
 
 export default withRouter(connect(

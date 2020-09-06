@@ -62,6 +62,14 @@ const CommonHelper = {
 
     return url;
   },
+
+  convertToSlug(str: string) {
+    return str
+        .toLowerCase()
+        .replace(/ /g,'-')
+        .replace(/[^\w-]+/g,'')
+        ;
+    }
 };
 
 export default CommonHelper;

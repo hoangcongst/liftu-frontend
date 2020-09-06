@@ -7,7 +7,8 @@ import ApiHelper from '../../helpers/api.helper';
 import { API_COMMAND } from "../../types/api.type";
 import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-
+import CommonHelper from '../../helpers/common.helper';
+import swal from 'sweetalert';
 const CATEGORIES = [
     { value: 'coding', label: 'coding' },
 ]
@@ -15,7 +16,12 @@ const TAGS = [
     { value: 'JAVASCRIPT', label: 'JAVASCRIPT' },
 ]
 
-class BlogEditor extends Component {
+interface Props {
+    match: any,
+    history?: any,
+}
+
+class BlogEditorAndCreatePost extends Component<Props, any> {
 
     state = {
         categories: [],
@@ -27,6 +33,38 @@ class BlogEditor extends Component {
             description: "",
             status: "",
             content: ""
+        },
+        postId: ''
+    }
+
+    
+    loadPost(postId: number) {
+        ApiHelper.request(
+            API_COMMAND.POST_SHOW,
+            {},
+            {isLoading: true},
+            { postId: postId }
+        ).subscribe(
+            (response: any) => {
+                this.setState({
+                    post: {
+                        title: response.data.data.title,
+                        description: response.data.data.description,
+                        status: response.data.data.status,
+                        content: response.data.data.content
+                    }
+                })
+            }
+        );
+    }
+
+    componentDidMount() {
+        const postId = this.props.match.params.postId;
+        this.setState({
+            postId: postId
+        });
+        if (postId) {
+            this.loadPost(postId)
         }
     }
 
@@ -64,6 +102,16 @@ class BlogEditor extends Component {
     }
 
     _onSubmit = () => {
+        if(this.state.postId) {
+            console.log("Chỉnh sửa Bài viết");
+            this._editPost(this.state.postId);
+        } else {
+            console.log("Tạo Bài viết");
+            this._createPost();
+        }
+    }
+
+    _createPost() {
         ApiHelper.request(
             API_COMMAND.POST_CREATE,
             {
@@ -75,14 +123,48 @@ class BlogEditor extends Component {
             { isLoading: true }
         ).subscribe(
             (response: any) => {
-
+                let postId = response.data.data.id;
+                swal({
+                    title: "Tạo bài viết thành công !",
+                    icon: "success",
+                    button: "OK!",
+                } as any)
+                    .then((value) => {
+                        this.props.history.push(`/posts/${postId}`);
+                    });
             },
-            error => {
-                try {
+            (error: any) => {
+                console.log(error);
+            }
+        );
+    }
 
-                } catch (e) {
-
-                }
+    _editPost(postId: any) {
+        ApiHelper.request(
+            API_COMMAND.EDIT_POST,
+            {
+                title: this.state.post.title,
+                content: this.state.post.content,
+                status: this.state.post.status,
+                description: this.state.post.description,
+                alias: CommonHelper.convertToSlug(this.state.post.title)
+            },
+            { isLoading: true },
+            {postId: postId}
+        ).subscribe(
+            (response: any) => {
+                console.log(response);
+                swal({
+                    title: "Chỉnh sửa bài viết thành công !",
+                    icon: "success",
+                    button: "OK!",
+                } as any)
+                .then((value) => {
+                    this.props.history.push(`/posts/${postId}`);
+                });
+            },
+            (error: any) => {
+                console.log(error);
             }
         );
     }
@@ -90,13 +172,15 @@ class BlogEditor extends Component {
     render() {
         return (
             <ContentWrapper>
-                <div className="content-heading">New Article</div>
-                <Alert color="info">
+                <div className="content-heading">
+                    {this.state.postId ? 'Chỉnh sửa bài viết' : 'Tạo bài viết' }
+                </div>
+                {/* <Alert color="info">
                     <em className="fa fa-exclamation-circle fa-lg fa-fw" />
                     <span>There is an autosaved version of this article that is more recent than the version below. <a
                         href="" className="text-white">Restore</a>
                     </span>
-                </Alert>
+                </Alert> */}
                 <Row>
                     { /* Article Content */}
                     <Col lg={9}>
@@ -185,4 +269,4 @@ class BlogEditor extends Component {
 
 }
 
-export default BlogEditor;
+export default BlogEditorAndCreatePost;
