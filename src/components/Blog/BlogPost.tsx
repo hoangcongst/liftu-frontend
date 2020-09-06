@@ -207,7 +207,7 @@ class BlogPost extends Component<Props, any> {
                                         (comment: any) => (
                                             <div key={comment.id} >
                                                 <div className="media">
-                                                    <img className="mr-3 rounded-circle thumb64" src="img/user/default.jpg" alt="Demo" />
+                                                    <img className="mr-3 rounded-circle thumb64" src="/img/user/default.jpg" alt="Demo" />
                                                     <div className="media-body">
                                                         <h4 id="media-heading">
                                                             <a href="">{comment.user.display_name}  </a>

@@ -9,7 +9,7 @@ class Recover extends Component {
                 <div className="card card-flat">
                     <div className="card-header text-center bg-dark">
                         <a href="">
-                            <img className="block-center rounded" src="img/logo.png" alt="Logo"/>
+                            <img className="block-center rounded" src="/img/logo.png" alt="Logo"/>
                         </a>
                     </div>
                     <div className="card-body">
