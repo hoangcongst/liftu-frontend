@@ -11,7 +11,9 @@ import HeaderSearch from './HeaderSearch';
 import CommonHelper from '../../helpers/common.helper';
 
 type HeaderProps = {
-    toggleSetting: typeof toggleSetting
+    toggleSetting: typeof toggleSetting,
+    exprired: string,
+    user: Object
 };
 
 class Header extends Component<HeaderProps> {
@@ -19,6 +21,8 @@ class Header extends Component<HeaderProps> {
     state = {
         navSearchOpen: false
     };
+
+    
 
     toggleUserblock = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -100,8 +104,8 @@ class Header extends Component<HeaderProps> {
                         { /* END User avatar toggle */}
                         { /* START lock screen */}
                         <li className="nav-item d-none d-md-block">
-                            <Link to="lock" title="Lock screen" className="nav-link">
-                                <em className="icon-lock"></em>
+                            <Link to="/edit-post" title="Tạo bài biết" className="nav-link">
+                                <em className="icon-plus"></em>
                             </Link>
                         </li>
                         { /* END lock screen */}
@@ -120,7 +124,7 @@ class Header extends Component<HeaderProps> {
                             <ToggleFullscreen className="nav-link" />
                         </li>
                         {
-                            CommonHelper.getToken() && <>
+                            this.props.exprired && <>
                                 { /* START Alert menu */}
                                 <UncontrolledDropdown nav inNavbar className="dropdown-list">
                                     <DropdownToggle nav className="dropdown-toggle-nocaret">
@@ -201,10 +205,16 @@ class Header extends Component<HeaderProps> {
 
 }
 
+const stateToProps = (state: any) => {
+    return {
+        exprired: state.session.exprired,
+        user: state.session.user
+    };
+};
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({ toggleSetting: bindActionCreators(toggleSetting, dispatch) })
 
 export default connect(
-    null,
+    stateToProps,
     mapDispatchToProps
 )(Header);

@@ -8,13 +8,14 @@ import FormValidator from '../Forms/FormValidator';
 import ApiHelper from "../../helpers/api.helper";
 import {API_COMMAND} from "../../types/api.type";
 import {Dispatch} from "redux";
+import CommonHelper from '../../helpers/common.helper';
 
-import {loginAction, setRedirect} from "../../store/actions/session.actions";
+import {loginAction, setRedirect, userInfoAction} from "../../store/actions/session.actions";
 
 interface PropsInterface {
     login: Function,
     setRedirect: Function,
-    user: any,
+    user: Function,
     location: any,
     history?: any,
     redirectUrl?: string
@@ -75,10 +76,12 @@ class Login extends Component<PropsInterface> {
             { isLoading: true }
         ).subscribe(
             (response: any) => {
-                this.props.login(response.data.token);
+                CommonHelper.setToken(response.data.token);
+                this.props.login(response.data.exprired);
+                this.props.user(response.data.user);
                 this.props.history.push("/")
             },
-            error => {
+            (error: any) => {
                 try {
                     this._loginError(error);
                 } catch (e) {
@@ -189,8 +192,9 @@ const stateToProps = (state: any) => {
 };
 
 const dispatchToProps = (dispatch: Dispatch) => ({
-    login: (token: string) => dispatch(loginAction(token)),
+    login: (exprired: string) => dispatch(loginAction(exprired)),
     setRedirect: (url: string) => dispatch(setRedirect(url)),
+    user: (user: Object) => dispatch(userInfoAction(user)),
     dispatch
 });
 

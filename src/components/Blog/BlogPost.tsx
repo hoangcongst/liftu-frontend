@@ -3,9 +3,11 @@ import ContentWrapper from '../Layout/ContentWrapper';
 import { Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
 import ApiHelper from '../../helpers/api.helper';
 import { API_COMMAND } from '../../types/api.type';
-
+import { connect } from 'react-redux';
+import {Link} from "react-router-dom";
 interface Props {
-    match: any
+    match: any,
+    user: Object
 }
 
 class BlogPost extends Component<Props, any> {
@@ -29,9 +31,12 @@ class BlogPost extends Component<Props, any> {
         post: {
             title: "",
             content: "",
-            created_at: ""
-        }
+            created_at: "",
+            user: {}
+        },
+        postId: '',
     }
+    
 
     loadPost(postId: number) {
         ApiHelper.request(
@@ -43,9 +48,10 @@ class BlogPost extends Component<Props, any> {
             (response: any) => {
                 this.setState({
                     post: {
-                        title: response.data.title,
-                        content: response.data.content,
-                        created_at: response.data.created_at
+                        title: response.data.data.title,
+                        content: response.data.data.content,
+                        created_at: response.data.data.created_at,
+                        user: response.data.data.user
                     }
                 })
             }
@@ -53,8 +59,11 @@ class BlogPost extends Component<Props, any> {
     }
 
     componentDidMount() {
-        const postId = this.props.match.params.postId
-        if (this.props.match.params.postId) {
+        const postId = this.props.match.params.postId;
+        this.setState({
+            postId: postId
+        });
+        if (postId) {
             this.loadPost(postId)
         }
     }
@@ -67,7 +76,9 @@ class BlogPost extends Component<Props, any> {
                     <Col xl="9">
                         <Card className="card-default">
                             <CardHeader>
+                                
                                 <div className="bb">
+
                                     <h2 className="text-lg mt-3">{this.state.post.title}</h2>
                                     <p className="d-flex">
                                         <span>
@@ -75,6 +86,17 @@ class BlogPost extends Component<Props, any> {
                                                 <a className="ml-1" href="">Erica Castro</a>
                                             </small>
                                             <small className="mr-1">{this.state.post.created_at}</small>
+                                            <small className="mr-1">
+                                                {
+                                                    // @ts-ignore
+                                                    (this.props.user.id === this.state.post.user.id) &&
+                                                   
+                                                        <Link to={"/edit-post/" + this.state.postId} >
+                                                             <em className="fa fa-edit text-muted" /> 
+                                                        </Link>  
+                                                }
+                                                
+                                            </small>
                                         </span>
                                         <span className="ml-auto">
                                             <small>
@@ -241,4 +263,14 @@ class BlogPost extends Component<Props, any> {
     }
 
 }
-export default BlogPost;
+
+const stateToProps = (state: any) => {
+    return {
+        user: state.session.user
+    };
+};
+
+export default connect(
+    stateToProps,
+    null
+)(BlogPost);
