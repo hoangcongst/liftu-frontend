@@ -1,20 +1,14 @@
 import React, { Component } from 'react';
 import ContentWrapper from '../Layout/ContentWrapper';
-import { Row, Col, Card } from 'reactstrap';
-// React Select
-import Select from 'react-select';
+import { Row, Col, Card, CustomInput } from 'reactstrap';
 import ApiHelper from '../../helpers/api.helper';
 import { API_COMMAND } from "../../types/api.type";
 import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import CommonHelper from '../../helpers/common.helper';
 import swal from 'sweetalert';
-const CATEGORIES = [
-    { value: 'coding', label: 'coding' },
-]
-const TAGS = [
-    { value: 'JAVASCRIPT', label: 'JAVASCRIPT' },
-]
+import axios from 'axios'
+import MyUploadAdapter from '../../helpers/ckeditor.helper';
 
 interface Props {
     match: any,
@@ -32,17 +26,19 @@ class BlogEditorAndCreatePost extends Component<Props, any> {
             title: "",
             description: "",
             status: "",
-            content: ""
+            content: "",
+            thumbnail: ""
         },
+        thumbnailPreview: "",
         postId: ''
     }
 
-    
+
     loadPost(postId: number) {
         ApiHelper.request(
             API_COMMAND.POST_SHOW,
             {},
-            {isLoading: true},
+            { isLoading: true },
             { postId: postId }
         ).subscribe(
             (response: any) => {
@@ -51,8 +47,10 @@ class BlogEditorAndCreatePost extends Component<Props, any> {
                         title: response.data.data.title,
                         description: response.data.data.description,
                         status: response.data.data.status,
-                        content: response.data.data.content
-                    }
+                        content: response.data.data.content,
+                        thumbnail: response.data.data.thumbnail
+                    },
+                    thumbnailPreview: response.data.data.thumbnail
                 })
             }
         );
@@ -101,8 +99,37 @@ class BlogEditorAndCreatePost extends Component<Props, any> {
         })
     }
 
+    handleThumbnailLocalPath = (event: any) => {
+        let image_as_base64 = URL.createObjectURL(event.target.files[0])
+        this.uploadImage(event.target.files[0])
+        this.setState({
+            thumbnailPreview: image_as_base64
+        });
+    };
+
+    uploadImage(thumbnailLocalPath: any) {
+        // Create an object of formData
+        const formData = new FormData();
+
+        // Update the formData object
+        formData.append(
+            "file",
+            thumbnailLocalPath
+        );
+        axios.post(API_COMMAND.STORAGE_CREATE.url, formData).then((res: any) => {
+            if (res.data.status === 0) {
+                this.setState({
+                    post: {
+                        ...this.state.post,
+                        thumbnail: res.data.data
+                    }
+                })
+            }
+        })
+    }
+
     _onSubmit = () => {
-        if(this.state.postId) {
+        if (this.state.postId) {
             console.log("Chỉnh sửa Bài viết");
             this._editPost(this.state.postId);
         } else {
@@ -118,7 +145,8 @@ class BlogEditorAndCreatePost extends Component<Props, any> {
                 title: this.state.post.title,
                 content: this.state.post.content,
                 status: this.state.post.status,
-                description: this.state.post.description
+                description: this.state.post.description,
+                thumbnail: this.state.post.thumbnail
             },
             { isLoading: true }
         ).subscribe(
@@ -147,10 +175,10 @@ class BlogEditorAndCreatePost extends Component<Props, any> {
                 content: this.state.post.content,
                 status: this.state.post.status,
                 description: this.state.post.description,
-                alias: CommonHelper.convertToSlug(this.state.post.title)
+                thumbnail: this.state.post.thumbnail
             },
             { isLoading: true },
-            {postId: postId}
+            { postId: postId }
         ).subscribe(
             (response: any) => {
                 console.log(response);
@@ -159,9 +187,9 @@ class BlogEditorAndCreatePost extends Component<Props, any> {
                     icon: "success",
                     button: "OK!",
                 } as any)
-                .then((value) => {
-                    this.props.history.push(`/posts/${postId}`);
-                });
+                    .then((value) => {
+                        this.props.history.push(`/posts/${postId}`);
+                    });
             },
             (error: any) => {
                 console.log(error);
@@ -173,7 +201,7 @@ class BlogEditorAndCreatePost extends Component<Props, any> {
         return (
             <ContentWrapper>
                 <div className="content-heading">
-                    {this.state.postId ? 'Chỉnh sửa bài viết' : 'Tạo bài viết' }
+                    {this.state.postId ? 'Chỉnh sửa bài viết' : 'Tạo bài viết'}
                 </div>
                 {/* <Alert color="info">
                     <em className="fa fa-exclamation-circle fa-lg fa-fw" />
@@ -190,7 +218,7 @@ class BlogEditorAndCreatePost extends Component<Props, any> {
                                     name="article-title" placeholder="Article title..."
                                     className="mb-3 form-control form-control-lg" />
                                 <CKEditor
-                                    editor={ ClassicEditor }
+                                    editor={ClassicEditor}
                                     data={this.state.post.content}
                                     onInit={(editor: any) => {
                                         // Insert the toolbar before the editable area.
@@ -198,6 +226,9 @@ class BlogEditorAndCreatePost extends Component<Props, any> {
                                             editor.ui.view.toolbar.element,
                                             editor.ui.getEditableElement()
                                         );
+                                        editor.plugins.get("FileRepository").createUploadAdapter = function(loader: any) {
+                                            return new MyUploadAdapter(loader);
+                                        };
                                     }}
                                     onChange={this.onEditorStateChange}
                                 />
@@ -226,25 +257,15 @@ class BlogEditorAndCreatePost extends Component<Props, any> {
                     { /* Article sidebar */}
                     <Col lg={3}>
                         <Card body className="card-default">
-                            <p className="lead">Article Data</p>
-                            <p>Categories</p>
-                            <Select
-                                name="categories"
-                                multi
-                                simpleValue
-                                value={this.state.categories}
-                                onChange={this.handleChangeSelect.bind(this, 'categories')}
-                                options={CATEGORIES}
-                            />
-                            <p className="mt-2">Tags</p>
-                            <Select
-                                name="tags"
-                                multi
-                                simpleValue
-                                value={this.state.tags}
-                                onChange={this.handleChangeSelect.bind(this, 'tags')}
-                                options={TAGS}
-                            />
+                            <p>Thumbnail</p>
+                            <div className="form-group row">
+                                <Col md={10}>
+                                    <CustomInput type="file" onChange={this.handleThumbnailLocalPath} id="thumbnailLocalPath" name="thumbnailLocalPath" />
+                                </Col>
+                            </div>
+                            <img src={this.state.thumbnailPreview}
+                                style={{ width: '50%', height: '50%', alignSelf: 'center', visibility: this.state.thumbnailPreview ? "visible" : "hidden" }} />
+
                             <p className="lead mt-3">SEO Metadata</p>
                             <div className="form-group">
                                 <p>Title</p>
