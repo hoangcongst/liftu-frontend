@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import moment from 'moment';
 const CommonHelper = {
   setCookie(name: string, value: any, min?: any) {
     const date = new Date();
@@ -65,11 +66,15 @@ const CommonHelper = {
 
   convertToSlug(str: string) {
     return str
-        .toLowerCase()
-        .replace(/ /g,'-')
-        .replace(/[^\w-]+/g,'')
-        ;
-    }
+      .toLowerCase()
+      .replace(/ /g, '-')
+      .replace(/[^\w-]+/g, '')
+      ;
+  },
+
+  formatDate(input: string): string {
+    return moment(new Date(input)).format('YYYY-MM-DD HH:mm')
+  }
 };
 
 export default CommonHelper;

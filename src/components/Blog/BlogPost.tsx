@@ -5,6 +5,7 @@ import ApiHelper from '../../helpers/api.helper';
 import { API_COMMAND } from '../../types/api.type';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
+import CommonHelper from '../../helpers/common.helper';
 interface Props {
     match: any,
     user: any
@@ -28,7 +29,12 @@ class BlogPost extends Component<Props, any> {
             }
         },
         comments: [],
-        postId: '',
+        commentPageable: {
+            last: false,
+            page: 0
+        },
+        commentContent: "",
+        postId: 0,
     }
 
 
@@ -47,18 +53,85 @@ class BlogPost extends Component<Props, any> {
         );
     }
 
-    loadComments(postId: number, parentCommentId: number) {
+    loadComments(postId: number, parentCommentId: number, page = 0, isAddBellow = false) {
         ApiHelper.request(
             API_COMMAND.COMMENT_INDEX,
-            { post_id: postId, parent_comment_id: parentCommentId },
+            { post_id: postId, parent_comment_id: parentCommentId, page: page },
             { isLoading: true },
         ).subscribe(
             (response: any) => {
+                let comments = []
+                if (!isAddBellow)
+                    comments = response.data.content
+                else {
+                    comments = [...this.state.comments, ...response.data.content]
+                }
+
                 this.setState({
-                    comments: response.data.content
+                    comments: comments,
+                    commentPageable: {
+                        last: response.data.last,
+                        page: response.data.pageable.pageNumber
+                    }
                 })
             }
         );
+    }
+
+    handleClickViewMoreComment = () => {
+        if (!this.state.commentPageable.last) {
+            this.loadComments(this.state.postId, 0, this.state.commentPageable.page + 1, true)
+        }
+    }
+
+    deleteComment(commentId: number) {
+        ApiHelper.request(
+            API_COMMAND.COMMENT_DELETE,
+            {},
+            { isLoading: true },
+            { commentId: commentId }
+        ).subscribe(
+            (response: any) => {
+                this.setState({
+                    post: {
+                        ...this.state.post,
+                        numberComment: this.state.post.numberComment - 1
+                    }
+                })
+                this.loadComments(this.state.postId, 0)
+            }
+        );
+    }
+
+    createComment(postId: number, parentCommentId: number, content: String) {
+        ApiHelper.request(
+            API_COMMAND.COMMENT_CREATE,
+            { post_id: postId, parent_comment_id: parentCommentId, content: content },
+            { isLoading: true },
+        ).subscribe(
+            (response: any) => {
+                if (response.data.status === 0) {
+                    this.setState({
+                        commentContent: "",
+                        post: {
+                            ...this.state.post,
+                            numberComment: this.state.post.numberComment + 1
+                        }
+                    })
+                    this.loadComments(postId, parentCommentId)
+                }
+            }
+        );
+    }
+
+    handleComment = (event: any) => {
+        this.setState({
+            commentContent: event.target.value
+        })
+    }
+
+    isOwner = (itemUserId: number) => {
+        return this.props.user.id === itemUserId
     }
 
     componentDidMount() {
@@ -85,7 +158,7 @@ class BlogPost extends Component<Props, any> {
 
                                     <h2 className="text-md mt-3">{this.state.post.title + " "}
                                         {
-                                            (this.props.user.id === this.state.post.user.id) &&
+                                            this.isOwner(this.state.post.user.id) &&
                                             <Link to={"/edit-post/" + this.state.postId} >
                                                 <em className="fa fa-edit text-muted" />
                                             </Link>
@@ -96,7 +169,7 @@ class BlogPost extends Component<Props, any> {
                                             <small className="mr-1">By
                                                 <a className="ml-1" href="">{this.state.post.user.display_name}</a>
                                             </small>
-                                            <small className="mr-1">{this.state.post.created_at}</small>
+                                            <small className="mr-1">{CommonHelper.formatDate(this.state.post.created_at)}</small>
                                         </span>
                                         <span className="ml-auto">
                                             <small>
@@ -132,41 +205,32 @@ class BlogPost extends Component<Props, any> {
                                 {
                                     this.state.comments.map(
                                         (comment: any) => (
-                                            <>
+                                            <div key={comment.id} >
                                                 <div className="media">
-                                                    <img className="mr-3 rounded-circle thumb64" src="img/user/01.jpg" alt="Demo" />
+                                                    <img className="mr-3 rounded-circle thumb64" src="img/user/default.jpg" alt="Demo" />
                                                     <div className="media-body">
                                                         <h4 id="media-heading">
-                                                            <a href="">{comment.user.display_name}</a>
-                                                            <small> {comment.created_at}</small>
+                                                            <a href="">{comment.user.display_name}  </a>
+                                                            <small>{CommonHelper.formatDate(comment.created_at)}</small>
                                                         </h4>
                                                         <p>{comment.content}</p>
+                                                        {
+                                                            this.isOwner(comment.user.id) && <>
+                                                                {/* <button className="btn mb-1 mr-1 btn-xs btn-outline-success" onClick={() => { }}>Edit</button> */}
+                                                                <button className="btn mb-1 mr-1 btn-xs btn-outline-danger" onClick={() => this.deleteComment(comment.id)}>Delete</button>
+                                                            </>}
                                                     </div>
                                                 </div>
                                                 <hr />
-                                            </>
+                                            </div>
                                         )
                                     )
                                 }
-
-                                <div className="media">
-                                    <img className="mr-3 rounded-circle thumb64" src="img/user/03.jpg" alt="Demo" />
-                                    <div className="media-body mb-3">
-                                        <h4 id="media-heading">
-                                            <a href="">Dustin Dunn</a>
-                                            <small> 20 min</small>
-                                        </h4>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                                        <hr />
-                                        <div className="media">
-                                            <img className="mr-3 rounded-circle thumb64" src="img/user/06.jpg" alt="Demo" />
-                                            <div className="media-body">
-                                                <h4 id="nested-media-heading">
-                                                    <a href="">Marcus Gomez</a>
-                                                    <small> 1 hour</small>
-                                                </h4>Integer ac nisl et urna gravida malesuada. Vivamus fermentum libero vel felis aliquet interdum.</div>
-                                        </div>
-                                    </div>
-                                </div>
+                                {
+                                    !this.state.commentPageable.last &&
+                                    <button type="button" onClick={() => this.handleClickViewMoreComment()}
+                                        className="btn btn-secondary btn-xs">View more comments</button>
+                                }
                             </CardBody>
                         </Card>
                         <Card>
@@ -177,12 +241,14 @@ class BlogPost extends Component<Props, any> {
                                 <form className="form-horizontal" action="/">
                                     <div className="form-group row">
                                         <Col xs="12">
-                                            <textarea className="form-control" id="post-comment" name="post-comment" rows={4} placeholder="Comment here.." />
+                                            <textarea className="form-control" value={this.state.commentContent} onChange={this.handleComment}
+                                                id="post-comment" name="post-comment" rows={4} placeholder="Comment here.." />
                                         </Col>
                                     </div>
                                     <div className="form-group row">
                                         <Col xs="12">
-                                            <button className="btn btn-primary" type="button">Send Comment</button>
+                                            <button className="btn btn-primary" type="button"
+                                                onClick={() => this.createComment(this.state.postId, 0, this.state.commentContent)}>Send Comment</button>
                                         </Col>
                                     </div>
                                 </form>

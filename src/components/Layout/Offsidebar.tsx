@@ -60,7 +60,7 @@ class Offsidebar extends Component<OffsidebarProps> {
         this.setState({
             offsidebarReady: false
         });
-        
+
         this.props.history.push("/");
     }
 
@@ -101,7 +101,7 @@ class Offsidebar extends Component<OffsidebarProps> {
                                     { /* END list title */}
                                     <div className="list-group-item list-group-item-action border-0">
                                         <div className="media">
-                                            <img className="align-self-center mr-3 rounded-circle thumb48" src="img/user/05.jpg" alt="User avatar" />
+                                            <img className="align-self-center mr-3 rounded-circle thumb48" src="img/user/default.jpg" alt="User avatar" />
                                             <div className="media-body text-truncate">
                                                 <a href="">
                                                     <strong>Juan Sims</strong>
@@ -116,7 +116,7 @@ class Offsidebar extends Component<OffsidebarProps> {
                                     </div>
                                     <div className="list-group-item list-group-item-action border-0">
                                         <div className="media">
-                                            <img className="align-self-center mr-3 rounded-circle thumb48" src="img/user/08.jpg" alt="User avatar" />
+                                            <img className="align-self-center mr-3 rounded-circle thumb48" src="img/user/default.jpg" alt="User avatar" />
                                             <div className="media-body text-truncate">
                                                 <a href="">
                                                     <strong>Tomothy Roberts</strong>
@@ -136,7 +136,7 @@ class Offsidebar extends Component<OffsidebarProps> {
                                     { /* END list title */}
                                     <div className="list-group-item list-group-item-action border-0">
                                         <div className="media">
-                                            <img className="align-self-center mr-3 rounded-circle thumb48" src="img/user/09.jpg" alt="User avatar" />
+                                            <img className="align-self-center mr-3 rounded-circle thumb48" src="img/user/default.jpg" alt="User avatar" />
                                             <div className="media-body text-truncate">
                                                 <a href="">
                                                     <strong>Lawrence Robinson</strong>
@@ -151,7 +151,7 @@ class Offsidebar extends Component<OffsidebarProps> {
                                     </div>
                                     <div className="list-group-item list-group-item-action border-0">
                                         <div className="media">
-                                            <img className="align-self-center mr-3 rounded-circle thumb48" src="img/user/10.jpg" alt="User avatar" />
+                                            <img className="align-self-center mr-3 rounded-circle thumb48" src="img/user/default.jpg" alt="User avatar" />
                                             <div className="media-body text-truncate">
                                                 <a href="">
                                                     <strong>Tyrone Owens</strong>

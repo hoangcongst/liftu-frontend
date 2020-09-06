@@ -8,6 +8,7 @@ import _ from "underscore";
 import {Link} from "react-router-dom";
 // import {withRouter} from 'react-router';
 import '../../styles/style-post.css';
+import CommonHelper from '../../helpers/common.helper';
 class BlogList extends Component {
 
     state = {
@@ -64,7 +65,7 @@ class BlogList extends Component {
                                             <small className="mr-1">By
                                                 <a className="ml-1" href="">{post.displayName}</a>
                                             </small>
-                                            <small className="mr-1">{post.createdAt}</small>
+                                            <small className="mr-1">{CommonHelper.formatDate(post.createdAt)}</small>
                                         </span>
                                                 <span className="ml-auto">
                                             <small>
