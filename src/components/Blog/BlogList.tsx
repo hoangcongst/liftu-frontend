@@ -1,30 +1,45 @@
 import React, {Component} from 'react';
 import ContentWrapper from '../Layout/ContentWrapper';
 import {Row, Col, Card, CardHeader, CardBody, CardColumns} from 'reactstrap';
+import Pagination from "../Elements/Pagination";
 import ApiHelper from "../../helpers/api.helper";
 import {API_COMMAND} from "../../types/api.type";
+import _ from "underscore";
 import {Link} from "react-router-dom";
 // import {withRouter} from 'react-router';
 import '../../styles/style-post.css';
 class BlogList extends Component {
 
     state = {
-        posts: []
+        posts: [],
+        total: 0,
+        page: 1,
     }
 
     componentDidMount() {
         this.loadPosts()
     }
 
+    _goPage = _.debounce((page: number) => {
+        this.setState({page: page}, () => {
+            this.loadPosts()
+        });
+    }, 500);
+
     loadPosts() {
+        let reqParams: any = {
+            page: this.state.page - 1,
+            size: 5,
+        };
         ApiHelper.request(
             API_COMMAND.POST_INDEX,
-            {},
+            reqParams,
             {isLoading: true}
         ).subscribe(
             (response: any) => {
                 this.setState({
-                    posts: response.data.data.content
+                    posts: response.data.data.content,
+                    total: response.data.data.totalElements
                 })
             }
         );
@@ -68,6 +83,9 @@ class BlogList extends Component {
                             }
 
                         </CardColumns>
+                        <div>
+                            <Pagination page={this.state.page} total={this.state.total} listNum={5} goPage={this._goPage}/>
+                        </div>
                     </Col>
                     {/* Blog Sidebar */}
                     <Col xl="3">
