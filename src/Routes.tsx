@@ -24,12 +24,13 @@ const BlogArticle = lazy(() => import('./components/Blog/BlogArticles'));
 const BlogEditorAndCreatePost = lazy(() => import('./components/Blog/BlogEditorAndCreatePost'));
 
 const Login = lazy(() => import('./components/Pages/Login'));
+const Register = lazy(() => import('./components/Pages/Register'));
 // List of routes that uses the page layout
 // listed here to Switch between layouts
 // depending on the current pathname
 const listofPages: Array<string> = [
-    '/login',
-    '/register',
+    '/auth/login',
+    '/auth/register',
     '/recover',
     '/lock',
     '/notfound',
@@ -53,7 +54,8 @@ class Routes extends React.PureComponent<any, any> {
                 <BasePage>
                     <Suspense fallback={<PageLoader />}>
                         <Switch location={this.props.location}>
-                            <Route path="/login" component={waitFor(Login)} />
+                            <Route path="/auth/login" component={waitFor(Login)} />
+                            <Route path="/auth/register" component={waitFor(Register)} />
                         </Switch>
                     </Suspense>
                 </BasePage>

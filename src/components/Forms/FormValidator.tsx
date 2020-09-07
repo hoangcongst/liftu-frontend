@@ -49,6 +49,11 @@ const FormValidator = {
                     case 'url':
                         result[m] = !validator.isURL(value)
                         break;
+                    case 'equalto':
+                        // here we expect a valid ID as param
+                        const value2 = (document.getElementById(param) as HTMLInputElement).value;
+                        result[m] = !validator.equals(value, value2)
+                        break;
                     case 'minlen':
                         result[m] = !validator.isLength(value, { min: param })
                         break;

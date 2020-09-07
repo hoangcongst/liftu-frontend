@@ -1,17 +1,33 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Link, withRouter } from 'react-router-dom';
 import { Input, CustomInput } from 'reactstrap';
+import ApiHelper from "../../helpers/api.helper";
+import {API_COMMAND} from "../../types/api.type";
+import FormValidator from '../Forms/FormValidator';
+import CommonHelper from '../../helpers/common.helper';
+import {compose, Dispatch} from 'redux'
+import {loginAction, setRedirect, userInfoAction} from "../../store/actions/session.actions";
 
-import FormValidator from '../Forms/FormValidator.js';
-
-class Register extends Component {
+interface PropsInterface {
+    login: Function,
+    setRedirect: Function,
+    user: Function,
+    location: any,
+    history?: any,
+    redirectUrl?: string
+}
+class Register extends Component<PropsInterface> {
 
     state = {
         formRegister: {
             email: '',
             password: '',
             password2: '',
-            terms: false
+            username: '',
+            display_name: '',
+            avatar: 'thang.png',
+            terms: false,
         }
     }
 
@@ -22,6 +38,7 @@ class Register extends Component {
       */
     validateOnChange = (event:any) => {
         const input = event.target;
+        console.log(input);
         const form = input.form
         const value = input.type === 'checkbox' ? input.checked : input.value;
 
@@ -53,9 +70,53 @@ class Register extends Component {
             }
         });
 
-        console.log(hasError ? 'Form has errors. Check!' : 'Form Submitted!')
-
+        if(hasError) {
+            console.log('Form has errors. Check!');
+            
+        } else {
+            console.log('Form Submitted!');
+            ApiHelper.request(
+                API_COMMAND.REGISTER,
+                {
+                    email: this.state.formRegister.email,
+                    password: this.state.formRegister.password,
+                    username: this.state.formRegister.username,
+                    display_name: this.state.formRegister.display_name,
+                    avatar: this.state.formRegister.avatar,
+                },
+                { isLoading: true }
+            ).subscribe(
+                (response: any) => {
+                    console.log(response);
+                    this._login(this.state.formRegister.username, this.state.formRegister.password);
+                },
+                (error: any) => {
+                    console.log(error);
+                }
+            );
+        }
         e.preventDefault()
+    }
+
+    _login(user: string, password: string) {
+        ApiHelper.request(
+            API_COMMAND.SIGNIN,
+            {
+                username: user,
+                password: password,
+            },
+            { isLoading: true }
+        ).subscribe(
+            (response: any) => {
+                CommonHelper.setToken(response.data.token);
+                this.props.login(response.data.exprired);
+                this.props.user(response.data.user);
+                this.props.history.push("/");
+            },
+            (error: any) => {
+                console.log(error);
+            }
+        );
     }
 
     /* Simplify error check */
@@ -95,14 +156,54 @@ class Register extends Component {
                                             <em className="fa fa-envelope"></em>
                                         </span>
                                     </div>
-                                    { this.hasError('formRegister','email','required') && <span className="invalid-feedback">Field is required</span> }
-                                    { this.hasError('formRegister','email','email') && <span className="invalid-feedback">Field must be valid email</span> }
+                                    { this.hasError('formRegister','email','required') && <span className="invalid-feedback">Email không để trống</span> }
+                                    { this.hasError('formRegister','email','email') && <span className="invalid-feedback">Email không đúng định dạng</span> }
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="signupInputPassword1">Password</label>
+                                <label className="text-muted" htmlFor="signupInputEmail1">Tên đăng nhập</label>
                                 <div className="input-group with-focus">
                                     <Input type="text"
+                                        name="username"
+                                        className="border-right-0"
+                                        placeholder="Enter tên đăng nhập"
+                                        invalid={this.hasError('formRegister','username','required')}
+                                        onChange={this.validateOnChange}
+                                        data-validate='["required"]'
+                                        value={this.state.formRegister.username}/>
+                                    <div className="input-group-append">
+                                        <span className="input-group-text text-muted bg-transparent border-left-0">
+                                            <em className="fa fa-user"></em>
+                                        </span>
+                                    </div>
+                                    { this.hasError('formRegister','email','required') && <span className="invalid-feedback">Tên đăng nhập không để trống</span> }
+                                </div>
+                            </div>
+
+                            <div className="form-group">
+                                <label className="text-muted" htmlFor="signupInputEmail1">Tên hiển thị</label>
+                                <div className="input-group with-focus">
+                                    <Input type="text"
+                                        name="display_name"
+                                        className="border-right-0"
+                                        placeholder="Enter tên hiển thị"
+                                        invalid={this.hasError('formRegister','display_name','required')}
+                                        onChange={this.validateOnChange}
+                                        data-validate='["required"]'
+                                        value={this.state.formRegister.display_name}/>
+                                    <div className="input-group-append">
+                                        <span className="input-group-text text-muted bg-transparent border-left-0">
+                                            <em className="fa fa-user"></em>
+                                        </span>
+                                    </div>
+                                    { this.hasError('formRegister','display_name','required') && <span className="invalid-feedback">Tên hiển thị không để trống</span> }
+                                </div>
+                            </div>
+
+                            <div className="form-group">
+                                <label className="text-muted" htmlFor="signupInputPassword1">Password</label>
+                                <div className="input-group with-focus">
+                                    <Input type="password"
                                         id="id-password"
                                         name="password"
                                         className="border-right-0"
@@ -123,7 +224,7 @@ class Register extends Component {
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputRePassword1">Retype Password</label>
                                 <div className="input-group with-focus">
-                                    <Input type="text" name="password2"
+                                    <Input type="password" name="password2"
                                         className="border-right-0"
                                         placeholder="Retype assword"
                                         invalid={this.hasError('formRegister','password2','equalto')}
@@ -169,4 +270,23 @@ class Register extends Component {
     }
 }
 
-export default Register;
+const stateToProps = (state: any) => {
+    return {
+        user: state.user,
+        redirectUrl: state.session.redirectUrl,
+    };
+};
+
+const dispatchToProps = (dispatch: Dispatch) => ({
+    login: (exprired: string) => dispatch(loginAction(exprired)),
+    setRedirect: (url: string) => dispatch(setRedirect(url)),
+    user: (user: Object) => dispatch(userInfoAction(user)),
+    dispatch
+});
+
+const enhance = compose(
+    withRouter,
+    connect(stateToProps, dispatchToProps),
+)
+
+export default enhance(Register) as React.ComponentType<any>;

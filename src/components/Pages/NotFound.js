@@ -26,7 +26,7 @@ const NotFound = props => (
             </li>
             <li className="text-muted list-inline-item">|</li>
             <li className="list-inline-item">
-                <Link to="register" className="text-muted">Register</Link>
+                <Link to="/auth/register" className="text-muted">Register</Link>
             </li>
         </ul>
         <div className="p-3 text-center">

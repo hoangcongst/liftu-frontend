@@ -168,7 +168,7 @@ class Login extends Component<PropsInterface> {
                             <button className="btn btn-block btn-primary mt-3" type="submit">Login</button>
                         </form>
                         <p className="pt-3 text-center">Need to Signup?</p>
-                        <Link to="register" className="btn btn-block btn-secondary">Register Now</Link>
+                        <Link to="/auth/register" className="btn btn-block btn-secondary">Register Now</Link>
                     </div>
                 </div>
                 <div className="p-3 text-center">

@@ -1,8 +1,10 @@
 export const API_COMMAND = {
     HEALTH: { method: 'GET', url: '/health' },
 
-    SIGNIN:  { method: 'POST', url: '/login' },
+    SIGNIN:  { method: 'POST', url: '/auth/login' },
     SIGNOUT: { method: 'POST', url: '/signout' },
+    REGISTER: { method: 'POST', url: '/auth/register' },
+    
 
     POST_INDEX:  { method: 'GET',  url: '/posts' },
     POST_SHOW:   { method: 'GET',  url: '/posts/[postId]' },

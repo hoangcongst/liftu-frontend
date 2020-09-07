@@ -131,7 +131,12 @@ class BlogPost extends Component<Props, any> {
     }
 
     isOwner = (itemUserId: number) => {
-        return this.props.user.id === itemUserId
+        if(this.props.user && this.props.user.id) {
+            return this.props.user.id === itemUserId;
+        } else {
+            return false;
+        }
+        
     }
 
     componentDidMount() {
