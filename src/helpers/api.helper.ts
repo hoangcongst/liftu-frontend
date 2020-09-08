@@ -9,7 +9,8 @@ interface apiCmd {
   url: string;
 }
 
-axios.defaults.baseURL = 'http://api-liftu.textap.me/liftu'
+// axios.defaults.baseURL = 'http://api-liftu.textap.me/liftu'
+axios.defaults.baseURL = 'http://localhost:8090'
 axios.defaults.timeout = 10000;
 
 let $loading: any;

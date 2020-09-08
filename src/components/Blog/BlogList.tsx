@@ -57,7 +57,7 @@ class BlogList extends Component {
                                 this.state.posts.map((post: any) => {
                                     return <Card key={post.id}>
                                         <Link to={"/posts/" + post.id + "/" + post.alias} >
-                                            <img className="img-fluid" src="/img/bg1.jpg" alt="Demo"/>
+                                            <img className="img-fluid" src={post.thumbnail ? post.thumbnail : "/img/bg1.jpg"} alt="Demo"/>
                                         </Link>
                                         <CardBody>
                                             <p className="d-flex">

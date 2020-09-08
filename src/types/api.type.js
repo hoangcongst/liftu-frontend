@@ -15,4 +15,6 @@ export const API_COMMAND = {
     COMMENT_CREATE:  { method: 'POST',  url: '/comments' },
     COMMENT_UPDATE:  { method: 'PUT',  url: '/comments/[commentId]' },
     COMMENT_DELETE:  { method: 'DELETE',  url: '/comments/[commentId]' },
+
+    STORAGE_CREATE:  { method: 'POST',  url: '/storage' },
 }
