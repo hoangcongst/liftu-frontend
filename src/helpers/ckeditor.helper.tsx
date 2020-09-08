@@ -1,4 +1,5 @@
 import CommonHelper from "./common.helper";
+import { API_COMMAND } from "../types/api.type";
 
 export default class MyUploadAdapter {
     loader: any;
@@ -7,22 +8,21 @@ export default class MyUploadAdapter {
     constructor(loader: any) {
         // CKEditor 5's FileLoader instance.
         this.loader = loader;
-        // URL where to send files.
-        this.url = 'http://localhost:8090/storage';
+        this.url = API_COMMAND.BASE_URL + API_COMMAND.STORAGE_CREATE.url
     }
 
-    // Starts the upload process.
     upload() {
-        return new Promise((resolve, reject) => {
-            this._initRequest();
-            this._initListeners(resolve, reject);
-            this._sendRequest();
-        });
+        return this.loader.file
+            .then((file: any) => new Promise((resolve, reject) => {
+                this._initRequest();
+                this._initListeners(resolve, reject, file);
+                this._sendRequest(file);
+            }));
     }
 
     // Aborts the upload process.
     abort() {
-        if ( this.xhr ) {
+        if (this.xhr) {
             this.xhr.abort();
         }
     }
@@ -36,10 +36,10 @@ export default class MyUploadAdapter {
     }
 
     // Initializes XMLHttpRequest listeners.
-    _initListeners(resolve: any, reject: any) {
+    _initListeners(resolve: any, reject: any, file: any) {
         const xhr = this.xhr;
         const loader = this.loader;
-        const genericErrorText = 'Couldn\'t upload file:' + ` ${loader.file.name}.`;
+        const genericErrorText = `Couldn't upload file: ${loader.file.name}.`;
 
         xhr.addEventListener('error', () => reject(genericErrorText));
         xhr.addEventListener('abort', () => reject());
@@ -68,11 +68,9 @@ export default class MyUploadAdapter {
     }
 
     // Prepares the data and sends the request.
-    _sendRequest() {
+    _sendRequest(file: any) {
         const data = new FormData();
-
-        data.append('file', this.loader.file);
-
+        data.append('file', file);
         this.xhr.send(data);
     }
 }

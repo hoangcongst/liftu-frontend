@@ -5,7 +5,6 @@ import ApiHelper from '../../helpers/api.helper';
 import { API_COMMAND } from "../../types/api.type";
 import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import CommonHelper from '../../helpers/common.helper';
 import swal from 'sweetalert';
 import axios from 'axios'
 import MyUploadAdapter from '../../helpers/ckeditor.helper';
@@ -263,8 +262,8 @@ class BlogEditorAndCreatePost extends Component<Props, any> {
                                     <CustomInput type="file" onChange={this.handleThumbnailLocalPath} id="thumbnailLocalPath" name="thumbnailLocalPath" />
                                 </Col>
                             </div>
-                            <img src={this.state.thumbnailPreview}
-                                style={{ width: '50%', height: '50%', alignSelf: 'center', visibility: this.state.thumbnailPreview ? "visible" : "hidden" }} />
+                            <img alt="thumbnail" src={this.state.thumbnailPreview}
+                                style={{ width: '80%', height: '80%', alignSelf: 'center', visibility: this.state.thumbnailPreview ? "visible" : "hidden" }} />
 
                             <p className="lead mt-3">SEO Metadata</p>
                             <div className="form-group">

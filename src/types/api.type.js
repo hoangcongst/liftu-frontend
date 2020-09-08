@@ -1,4 +1,5 @@
 export const API_COMMAND = {
+    BASE_URL: 'http://localhost:8090', //'http://api-liftu.textap.me/liftu'
     HEALTH: { method: 'GET', url: '/health' },
 
     SIGNIN:  { method: 'POST', url: '/auth/login' },
