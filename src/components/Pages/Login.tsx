@@ -76,7 +76,7 @@ class Login extends Component<PropsInterface> {
             { isLoading: true }
         ).subscribe(
             (response: any) => {
-                CommonHelper.setToken(response.data.token);
+                CommonHelper.setToken(response.data.token, response.data.expired);
                 this.props.login(response.data.expired);
                 this.props.user(response.data.user);
                 this.props.history.push("/")

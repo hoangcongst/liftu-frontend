@@ -13,6 +13,11 @@ const CommonHelper = {
     document.cookie = name + '=' + (value || '') + expires + '; path=/';
   },
 
+  setCookieByDate(name: string, value: any, date: Date) {
+    const expires = '; expires=' + date.toUTCString();
+    document.cookie = name + '=' + (value || '') + expires + '; path=/';
+  },
+
   getCookie(name: string) {
     const nameEQ = name + '=';
     let ca = document.cookie.split(';');
@@ -30,8 +35,8 @@ const CommonHelper = {
     document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
   },
 
-  setToken(token: string) {
-    return this.setCookie('Access-token', token);
+  setToken(token: string, expired: string) {
+    return this.setCookieByDate('Access-token', token, new Date(expired));
   },
 
   getToken() {

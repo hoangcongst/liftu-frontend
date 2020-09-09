@@ -241,7 +241,7 @@ class BlogPost extends Component<Props, any> {
                                 }
                             </CardBody>
                         </Card>
-                        <Card className={AuthHelper.isAuthenticated(this.props.expired) ? "": "hidden"}>
+                        <Card className={AuthHelper.isAuthenticated(this.props.expired) ? "": "card-hidden"}>
                             <CardHeader>
                                 <em className="fas fa-pencil-alt mr-2" />Add your Comment
                             </CardHeader>

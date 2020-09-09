@@ -93,7 +93,7 @@ class Register extends Component<PropsInterface> {
     }
 
     _login(token: string, expired: string, user: any) {
-        CommonHelper.setToken(token);
+        CommonHelper.setToken(token, expired);
         this.props.login(expired);
         this.props.user(user);
         this.props.history.push("/");
