@@ -255,3 +255,9 @@
 .ck-editor__editable {
     min-height: 400px;
 }
+
+.hidden {
+    visibility: hidden;
+    height: 0px;
+    width: 0px;
+}

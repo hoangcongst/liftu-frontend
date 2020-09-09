@@ -77,7 +77,7 @@ class Routes extends React.PureComponent<any, any> {
                                         <Route path="/form-standard" component={waitFor(FormStandard)} />
                                         <Redirect from="/" to="/home" exact />
                                         <Route path="/home" component={waitFor(BlogList)} />
-                                        <PrivateRoute roles={[1, 2]} path="/posts/:postId?" component={waitFor(BlogPost)} />
+                                        <Route roles={[1, 2]} path="/posts/:postId?" component={waitFor(BlogPost)} />
                                         <PrivateRoute roles={[1, 4]} path="/blog-articles" component={waitFor(BlogArticle)} />
                                         <PrivateRoute roles={[1, 3]} path="/edit-post/:postId?" component={waitFor(BlogEditorAndCreatePost)} />
                                     </Switch>

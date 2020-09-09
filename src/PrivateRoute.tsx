@@ -1,15 +1,19 @@
 import React from 'react';
 import { Route, Redirect, RouteProps } from 'react-router';
 import { connect } from 'react-redux';
+import AuthHelper from './helpers/auth.helper';
+import CommonHelper from './helpers/common.helper';
+import StorageHelper from './helpers/storage.helper';
 interface PropsType extends RouteProps {
     roles?: number[],
     role?: number,
-    exprired?: string,
+    expired?: string,
 }
 
 class PrivateRoute extends React.Component<PropsType, any> {
     render() {
-        if (this.props.exprired && this.props.role) {
+        const isAuthenticated = AuthHelper.isAuthenticated(this.props.expired!)
+        if (isAuthenticated && this.props.role) {
             if (!this.props.roles || !this.props.roles.length) {
                 return <Route {...this.props} />
             }
@@ -17,6 +21,9 @@ class PrivateRoute extends React.Component<PropsType, any> {
                 return <Route {...this.props} />
             }
             return <div>Dont have permission</div>
+        } else {
+            CommonHelper.clearToken()
+            StorageHelper.clear()
         }
         return <Redirect to="/auth/login" />
     }
@@ -25,7 +32,7 @@ class PrivateRoute extends React.Component<PropsType, any> {
 const stateToProps = (state: any) => {
     return {
         role: 1,
-        exprired: state.session.exprired,
+        expired: state.session.expired,
     };
 };
 

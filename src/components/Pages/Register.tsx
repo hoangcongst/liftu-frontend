@@ -85,16 +85,16 @@ class Register extends Component<PropsInterface> {
             // Update the formData object
             axios.post(API_COMMAND.BASE_URL + API_COMMAND.REGISTER.url, formData).then((res: any) => {
                 if (res.data.status === 0) {
-                    this._login(res.data.token, res.data.exprired, res.data.user);
+                    this._login(res.data.token, res.data.expired, res.data.user);
                 }
             })
         }
         e.preventDefault()
     }
 
-    _login(token: string, exprired: string, user: any) {
+    _login(token: string, expired: string, user: any) {
         CommonHelper.setToken(token);
-        this.props.login(exprired);
+        this.props.login(expired);
         this.props.user(user);
         this.props.history.push("/");
     }
@@ -266,7 +266,7 @@ const stateToProps = (state: any) => {
 };
 
 const dispatchToProps = (dispatch: Dispatch) => ({
-    login: (exprired: string) => dispatch(loginAction(exprired)),
+    login: (expired: string) => dispatch(loginAction(expired)),
     setRedirect: (url: string) => dispatch(setRedirect(url)),
     user: (user: Object) => dispatch(userInfoAction(user)),
     dispatch

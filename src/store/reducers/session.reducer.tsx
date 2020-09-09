@@ -7,21 +7,21 @@ import {
     INFO_USER
 } from '../actions/session.actions'
 const login = (state: any, action: any) => {
-    const { exprired } = action;
-    if (exprired) {
+    const { expired } = action;
+    if (expired) {
         return {
             ...state,
-            exprired,
+            expired,
         };
     } else return state
 }
 
 const logout = (state: any, action: any) => {
-    const { exprired, user } = action;
+    const { expired, user } = action;
 
     return {
         ...state,
-        exprired,
+        expired,
         user
     };
 }
@@ -38,7 +38,7 @@ const infoUser = (state: any, action: any) => {
 
 const initialState: Session = {
     token: '',
-    exprired: '',
+    expired: '',
     user: {}
 }
 
