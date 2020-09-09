@@ -163,7 +163,7 @@ class BlogPost extends Component<Props, any> {
 
                                 <div className="bb">
 
-                                    <h2 className="text-md mt-3">{this.state.post.title + " "}
+                                    <h2 className="text-md">{this.state.post.title + " "}
                                         {
                                             this.isOwner(this.state.post.user.id) &&
                                             <Link to={"/edit-post/" + this.state.postId} >
@@ -187,7 +187,7 @@ class BlogPost extends Component<Props, any> {
                                     </p>
                                 </div>
                             </CardHeader>
-                            <CardBody>
+                            <CardBody className="text-xs">
                                 <div dangerouslySetInnerHTML={{ __html: this.state.post.content }} />
                                 <hr className="my-4" />
                                 <div className="btn-group" role="group" aria-label="...">
