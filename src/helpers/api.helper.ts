@@ -38,7 +38,7 @@ const ApiHelper = {
       this._getMethod(cmd.method, cmdUrl, params, requestConfig)
         .then((response: any) => {
           if (response && response.headers && response.headers.authorization) {
-            CommonHelper.setToken(response.headers.authorization);
+            CommonHelper.setToken(response.headers.authorization, "");
           }
 
           isLoading && this._hideLoading();

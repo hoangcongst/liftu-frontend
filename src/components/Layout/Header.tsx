@@ -10,7 +10,7 @@ import ToggleFullscreen from '../Common/ToggleFullscreen';
 import HeaderSearch from './HeaderSearch';
 type HeaderProps = {
     toggleSetting: typeof toggleSetting,
-    exprired: string,
+    expired: string,
     user: Object
 };
 
@@ -122,7 +122,7 @@ class Header extends Component<HeaderProps> {
                             <ToggleFullscreen className="nav-link" />
                         </li>
                         {
-                            this.props.exprired && <>
+                            this.props.expired && <>
                                 { /* START Alert menu */}
                                 <UncontrolledDropdown nav inNavbar className="dropdown-list">
                                     <DropdownToggle nav className="dropdown-toggle-nocaret">
@@ -205,7 +205,7 @@ class Header extends Component<HeaderProps> {
 
 const stateToProps = (state: any) => {
     return {
-        exprired: state.session.exprired,
+        expired: state.session.expired,
         user: state.session.user
     };
 };

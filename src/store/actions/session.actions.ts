@@ -12,12 +12,12 @@ export const LOGIN_FAILED=1
 export interface Session {
     token: string,
     user: Object,
-    exprired: string,
+    expired: string,
 }
 
 interface LoginAction {
     type: typeof LOGIN,
-    exprired: string
+    expired: string
 }
 
 interface UserInfoAction {
@@ -38,8 +38,8 @@ interface SetRedirectAction {
 
 export type SessionAction = LoginAction | LogoutAction | SetRedirectAction | UserInfoAction
 
-export function loginAction(exprired: string): SessionAction {
-    return { type: LOGIN, exprired };
+export function loginAction(expired: string): SessionAction {
+    return { type: LOGIN, expired };
 }
 
 export function userInfoAction(user: Object): SessionAction {

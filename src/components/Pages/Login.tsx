@@ -76,8 +76,8 @@ class Login extends Component<PropsInterface> {
             { isLoading: true }
         ).subscribe(
             (response: any) => {
-                CommonHelper.setToken(response.data.token);
-                this.props.login(response.data.exprired);
+                CommonHelper.setToken(response.data.token, response.data.expired);
+                this.props.login(response.data.expired);
                 this.props.user(response.data.user);
                 this.props.history.push("/")
             },
@@ -192,7 +192,7 @@ const stateToProps = (state: any) => {
 };
 
 const dispatchToProps = (dispatch: Dispatch) => ({
-    login: (exprired: string) => dispatch(loginAction(exprired)),
+    login: (expired: string) => dispatch(loginAction(expired)),
     setRedirect: (url: string) => dispatch(setRedirect(url)),
     user: (user: Object) => dispatch(userInfoAction(user)),
     dispatch

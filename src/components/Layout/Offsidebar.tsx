@@ -54,7 +54,7 @@ class Offsidebar extends Component<OffsidebarProps> {
         CommonHelper.clearToken();
         StorageHelper.clear();
         this.props.logOut({
-            exprired: '',
+            expired: '',
             user: {}
         });
         this.setState({

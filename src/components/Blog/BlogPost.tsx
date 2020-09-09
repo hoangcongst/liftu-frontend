@@ -6,9 +6,11 @@ import { API_COMMAND } from '../../types/api.type';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 import CommonHelper from '../../helpers/common.helper';
+import AuthHelper from '../../helpers/auth.helper';
 interface Props {
     match: any,
-    user: any
+    user: any,
+    expired: string
 }
 
 class BlogPost extends Component<Props, any> {
@@ -233,13 +235,13 @@ class BlogPost extends Component<Props, any> {
                                     )
                                 }
                                 {
-                                    !this.state.commentPageable.last &&
+                                    !this.state.commentPageable.last && this.state.comments.length > 0 &&
                                     <button type="button" onClick={() => this.handleClickViewMoreComment()}
                                         className="btn btn-secondary btn-xs">View more comments</button>
                                 }
                             </CardBody>
                         </Card>
-                        <Card>
+                        <Card className={AuthHelper.isAuthenticated(this.props.expired) ? "": "card-hidden"}>
                             <CardHeader>
                                 <em className="fas fa-pencil-alt mr-2" />Add your Comment
                             </CardHeader>
@@ -332,7 +334,8 @@ class BlogPost extends Component<Props, any> {
 
 const stateToProps = (state: any) => {
     return {
-        user: state.session.user
+        user: state.session.user,
+        expired: state.session.expired
     };
 };
 
