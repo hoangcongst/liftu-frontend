@@ -1,6 +1,9 @@
 const AuthHelper = {
-  isAuthenticated(input: string): boolean {
-    return input ? new Date(input) > new Date() : false
+  isAuthenticated(input: any): boolean {
+    if(input) {
+      return input ? new Date(input) > new Date() : false
+    }
+    return false;
   }
 };
 

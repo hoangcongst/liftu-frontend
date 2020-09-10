@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import CommonHelper from '../../helpers/common.helper';
 import AuthHelper from '../../helpers/auth.helper';
 import '../../styles/style-post.css';
+import {STATUS_API} from "../Common/constants";
 
 interface Props {
     match: any,
@@ -103,6 +104,11 @@ class BlogPost extends Component<Props, any> {
                     }
                 })
                 this.loadComments(this.state.postId, 0)
+            },
+            (error: any) => {
+                if (error.response.status !== STATUS_API.SUCCESS) {
+                    CommonHelper._getErrorRequest(error);
+                }
             }
         );
     }
@@ -123,6 +129,11 @@ class BlogPost extends Component<Props, any> {
                         }
                     })
                     this.loadComments(postId, parentCommentId)
+                }
+            },
+            (error: any) => {
+                if (error.response.status !== STATUS_API.SUCCESS) {
+                    CommonHelper._getErrorRequest(error);
                 }
             }
         );
