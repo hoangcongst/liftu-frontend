@@ -1,14 +1,16 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
-import { Input, CustomInput } from 'reactstrap';
-import { API_COMMAND } from "../../types/api.type";
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {Link, withRouter} from 'react-router-dom';
+import {CustomInput, Input} from 'reactstrap';
+import {API_COMMAND} from "../../types/api.type";
 import FormValidator from '../Forms/FormValidator';
 import CommonHelper from '../../helpers/common.helper';
-import { compose, Dispatch } from 'redux'
-import { loginAction, setRedirect, userInfoAction } from "../../store/actions/session.actions";
+import {compose, Dispatch} from 'redux'
+import {loginAction, setRedirect, userInfoAction} from "../../store/actions/session.actions";
 import '../../styles/register.css';
-import axios from 'axios'
+import axios from 'axios';
+import {STATUS_API} from '../Common/constants';
+import swal from "sweetalert";
 
 interface PropsInterface {
     login: Function,
@@ -67,8 +69,8 @@ class Register extends Component<PropsInterface> {
     onSubmit = (e: any) => {
         const form = e.target;
         const inputs = [...form.elements].filter(i => ['INPUT', 'SELECT'].includes(i.nodeName))
-        
-        const { errors, hasError } = FormValidator.bulkValidate(inputs)
+
+        const {errors, hasError} = FormValidator.bulkValidate(inputs)
 
         this.setState({
             [form.name]: {
@@ -87,7 +89,11 @@ class Register extends Component<PropsInterface> {
                 if (res.data.status === 0) {
                     this._login(res.data.token, res.data.expired, res.data.user);
                 }
-            })
+            }).catch((err) => {
+                if (err.response.status !== STATUS_API.SUCCESS) {
+                    swal(err.response.data.message).then(r => console.log(r));
+                }
+            });
         }
         e.preventDefault()
     }
@@ -114,7 +120,7 @@ class Register extends Component<PropsInterface> {
                 <div className="card card-flat">
                     <div className="card-header text-center bg-dark">
                         <a href="">
-                            <img className="block-center" src="/img/logo.png" alt="Logo" />
+                            <img className="block-center" src="/img/logo.png" alt="Logo"/>
                         </a>
                     </div>
                     <div className="card-body">
@@ -124,19 +130,20 @@ class Register extends Component<PropsInterface> {
                                 <label className="text-muted" htmlFor="signupInputEmail1">Tên đăng nhập</label>
                                 <div className="input-group with-focus">
                                     <Input type="text"
-                                        name="username"
-                                        className="border-right-0"
-                                        placeholder="Enter tên đăng nhập"
-                                        invalid={this.hasError('formRegister', 'username', 'required')}
-                                        onChange={this.validateOnChange}
-                                        data-validate='["required"]'
-                                        value={this.state.formRegister.username} />
+                                           name="username"
+                                           className="border-right-0"
+                                           placeholder="Enter tên đăng nhập"
+                                           invalid={this.hasError('formRegister', 'username', 'required')}
+                                           onChange={this.validateOnChange}
+                                           data-validate='["required"]'
+                                           value={this.state.formRegister.username}/>
                                     <div className="input-group-append">
                                         <span className="input-group-text text-muted bg-transparent border-left-0">
                                             <em className="fa fa-user"></em>
                                         </span>
                                     </div>
-                                    {this.hasError('formRegister', 'email', 'required') && <span className="invalid-feedback">Tên đăng nhập không để trống</span>}
+                                    {this.hasError('formRegister', 'email', 'required') &&
+                                    <span className="invalid-feedback">Tên đăng nhập không để trống</span>}
                                 </div>
                             </div>
 
@@ -144,53 +151,56 @@ class Register extends Component<PropsInterface> {
                                 <label className="text-muted" htmlFor="signupInputEmail1">Tên hiển thị</label>
                                 <div className="input-group with-focus">
                                     <Input type="text"
-                                        name="display_name"
-                                        className="border-right-0"
-                                        placeholder="Enter tên hiển thị"
-                                        invalid={this.hasError('formRegister', 'display_name', 'required')}
-                                        onChange={this.validateOnChange}
-                                        data-validate='["required"]'
-                                        value={this.state.formRegister.display_name} />
+                                           name="display_name"
+                                           className="border-right-0"
+                                           placeholder="Enter tên hiển thị"
+                                           invalid={this.hasError('formRegister', 'display_name', 'required')}
+                                           onChange={this.validateOnChange}
+                                           data-validate='["required"]'
+                                           value={this.state.formRegister.display_name}/>
                                     <div className="input-group-append">
                                         <span className="input-group-text text-muted bg-transparent border-left-0">
                                             <em className="fa fa-user"></em>
                                         </span>
                                     </div>
-                                    {this.hasError('formRegister', 'display_name', 'required') && <span className="invalid-feedback">Tên hiển thị không để trống</span>}
+                                    {this.hasError('formRegister', 'display_name', 'required') &&
+                                    <span className="invalid-feedback">Tên hiển thị không để trống</span>}
                                 </div>
                             </div>
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputEmail1">Email address</label>
                                 <div className="input-group with-focus">
                                     <Input type="email"
-                                        name="email"
-                                        className="border-right-0"
-                                        placeholder="Enter email"
-                                        invalid={this.hasError('formRegister', 'email', 'required') || this.hasError('formRegister', 'email', 'email')}
-                                        onChange={this.validateOnChange}
-                                        data-validate='["required", "email"]'
-                                        value={this.state.formRegister.email} />
+                                           name="email"
+                                           className="border-right-0"
+                                           placeholder="Enter email"
+                                           invalid={this.hasError('formRegister', 'email', 'required') || this.hasError('formRegister', 'email', 'email')}
+                                           onChange={this.validateOnChange}
+                                           data-validate='["required", "email"]'
+                                           value={this.state.formRegister.email}/>
                                     <div className="input-group-append">
                                         <span className="input-group-text text-muted bg-transparent border-left-0">
                                             <em className="fa fa-envelope"></em>
                                         </span>
                                     </div>
-                                    {this.hasError('formRegister', 'email', 'required') && <span className="invalid-feedback">Email không để trống</span>}
-                                    {this.hasError('formRegister', 'email', 'email') && <span className="invalid-feedback">Email không đúng định dạng</span>}
+                                    {this.hasError('formRegister', 'email', 'required') &&
+                                    <span className="invalid-feedback">Email không để trống</span>}
+                                    {this.hasError('formRegister', 'email', 'email') &&
+                                    <span className="invalid-feedback">Email không đúng định dạng</span>}
                                 </div>
                             </div>
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputPassword1">Password</label>
                                 <div className="input-group with-focus">
                                     <Input type="password"
-                                        id="id-password"
-                                        name="password"
-                                        className="border-right-0"
-                                        placeholder="Password"
-                                        invalid={this.hasError('formRegister', 'password', 'required')}
-                                        onChange={this.validateOnChange}
-                                        data-validate='["required"]'
-                                        value={this.state.formRegister.password}
+                                           id="id-password"
+                                           name="password"
+                                           className="border-right-0"
+                                           placeholder="Password"
+                                           invalid={this.hasError('formRegister', 'password', 'required')}
+                                           onChange={this.validateOnChange}
+                                           data-validate='["required"]'
+                                           value={this.state.formRegister.password}
                                     />
                                     <div className="input-group-append">
                                         <span className="input-group-text text-muted bg-transparent border-left-0">
@@ -204,13 +214,13 @@ class Register extends Component<PropsInterface> {
                                 <label className="text-muted" htmlFor="signupInputRePassword1">Retype Password</label>
                                 <div className="input-group with-focus">
                                     <Input type="password" name="password2"
-                                        className="border-right-0"
-                                        placeholder="Retype assword"
-                                        invalid={this.hasError('formRegister', 'password2', 'equalto')}
-                                        onChange={this.validateOnChange}
-                                        data-validate='["equalto"]'
-                                        value={this.state.formRegister.password2}
-                                        data-param="id-password"
+                                           className="border-right-0"
+                                           placeholder="Retype assword"
+                                           invalid={this.hasError('formRegister', 'password2', 'equalto')}
+                                           onChange={this.validateOnChange}
+                                           data-validate='["equalto"]'
+                                           value={this.state.formRegister.password2}
+                                           data-param="id-password"
                                     />
                                     <div className="input-group-append">
                                         <span className="input-group-text text-muted bg-transparent border-left-0">
@@ -221,21 +231,22 @@ class Register extends Component<PropsInterface> {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <CustomInput type="file" onChange={this.handleThumbnailLocalPath} id="thumbnailLocalPath" name="avatar" />
+                                <CustomInput type="file" onChange={this.handleThumbnailLocalPath}
+                                             id="thumbnailLocalPath" name="avatar"/>
                                 <img alt="avatar" className="thumbnailAvatar" src={this.state.thumbnailPreview}
-                                    style={{
-                                        height: this.state.thumbnailPreview ? "50%" : "0px",
-                                        visibility: this.state.thumbnailPreview ? "visible" : "hidden"
-                                    }} />
+                                     style={{
+                                         height: this.state.thumbnailPreview ? "50%" : "0px",
+                                         visibility: this.state.thumbnailPreview ? "visible" : "hidden"
+                                     }}/>
                             </div>
 
                             <CustomInput type="checkbox" id="terms"
-                                name="terms"
-                                label="I agree with the terms"
-                                invalid={this.hasError('formRegister', 'terms', 'required')}
-                                onChange={this.validateOnChange}
-                                data-validate='["required"]'
-                                checked={this.state.formRegister.terms}>
+                                         name="terms"
+                                         label="I agree with the terms"
+                                         invalid={this.hasError('formRegister', 'terms', 'required')}
+                                         onChange={this.validateOnChange}
+                                         data-validate='["required"]'
+                                         checked={this.state.formRegister.terms}>
                                 <span className="invalid-feedback">Field is required</span>
                             </CustomInput>
                             <button className="btn btn-block btn-primary mt-3" type="submit">Create account</button>
@@ -250,7 +261,7 @@ class Register extends Component<PropsInterface> {
                     <span>2020</span>
                     <span className="mx-2">-</span>
                     <span>LiftU</span>
-                    <br />
+                    <br/>
                     <span>Copyright © 2020 LiftU. All Rights Reserved</span>
                 </div>
             </div>

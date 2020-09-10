@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import moment from 'moment';
+import swal from "sweetalert";
 const CommonHelper = {
   setCookie(name: string, value: any, min?: any) {
     const date = new Date();
@@ -79,6 +80,18 @@ const CommonHelper = {
 
   formatDate(input: string): string {
     return moment(new Date(input)).format('YYYY-MM-DD HH:mm')
+  },
+
+  _getErrorRequest(err: any) {
+    let msg = '';
+    let arrMSg = err.response.data.message.split(',').map((str: any) => str.split(':')).reduce((prev: any, [key, value]: any) => {
+      prev[key.trim()] = value.trim();
+      return prev;
+    }, {});
+    for (const index in arrMSg) {
+      msg += index.split('.')[2] + ': ' + arrMSg[index] + '\n';
+    }
+    swal(msg).then(r => console.log(r));
   }
 };
 

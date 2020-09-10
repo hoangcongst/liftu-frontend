@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import ContentWrapper from '../Layout/ContentWrapper';
 import { Row, Col, Card, CustomInput } from 'reactstrap';
 import ApiHelper from '../../helpers/api.helper';
+import CommonHelper from '../../helpers/common.helper';
 import { API_COMMAND } from "../../types/api.type";
 import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import swal from 'sweetalert';
 import axios from 'axios'
 import MyUploadAdapter from '../../helpers/ckeditor.helper';
+import {STATUS_API} from "../Common/constants";
 
 interface Props {
     match: any,
@@ -161,7 +163,9 @@ class BlogEditorAndCreatePost extends Component<Props, any> {
                     });
             },
             (error: any) => {
-                console.log(error);
+                if (error.response.status !== STATUS_API.SUCCESS) {
+                    CommonHelper._getErrorRequest(error);
+                }
             }
         );
     }
@@ -191,7 +195,9 @@ class BlogEditorAndCreatePost extends Component<Props, any> {
                     });
             },
             (error: any) => {
-                console.log(error);
+                if (error.response.status !== STATUS_API.SUCCESS) {
+                    CommonHelper._getErrorRequest(error);
+                }
             }
         );
     }

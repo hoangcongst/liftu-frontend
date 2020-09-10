@@ -16,3 +16,7 @@
 figure.media {
     display: block;
 }
+
+.card-hidden {
+    display: none;
+}

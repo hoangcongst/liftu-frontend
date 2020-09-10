@@ -26,3 +26,7 @@ export const APP_MEDIAQUERY = {
     'tablet':                 768,
     'mobile':                 480
 };
+
+export const STATUS_API = {
+    'SUCCESS'   : 200,
+};
