@@ -11,6 +11,7 @@ import {Dispatch} from "redux";
 import CommonHelper from '../../helpers/common.helper';
 
 import {loginAction, setRedirect, userInfoAction} from "../../store/actions/session.actions";
+import {STATUS_API} from "../Common/constants";
 
 interface PropsInterface {
     login: Function,
@@ -82,20 +83,14 @@ class Login extends Component<PropsInterface> {
                 this.props.history.push("/")
             },
             (error: any) => {
-                try {
-                    this._loginError(error);
-                } catch (e) {
-
+                if (error.response.status !== STATUS_API.SUCCESS) {
+                    CommonHelper._getErrorRequest(error);
                 }
             }
         );
 
         e.preventDefault()
     }
-
-    _loginError = (error: any) => {
-        console.log(error)
-    };
 
     /* Simplify error check */
     hasError = (formName:string, inputName:string, method:string) => {
