@@ -12,6 +12,7 @@ import CommonHelper from '../../helpers/common.helper';
 
 import {loginAction, setRedirect, userInfoAction} from "../../store/actions/session.actions";
 import {STATUS_API} from "../Common/constants";
+import swal from "sweetalert";
 
 interface PropsInterface {
     login: Function,
@@ -84,7 +85,7 @@ class Login extends Component<PropsInterface> {
             },
             (error: any) => {
                 if (error.response.status !== STATUS_API.SUCCESS) {
-                    CommonHelper._getErrorRequest(error);
+                    swal(error.response.data.message).then(r => console.log(r));
                 }
             }
         );
