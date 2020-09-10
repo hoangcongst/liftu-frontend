@@ -10,6 +10,7 @@ import {loginAction, setRedirect, userInfoAction} from "../../store/actions/sess
 import '../../styles/register.css';
 import axios from 'axios';
 import {STATUS_API} from '../Common/constants';
+import swal from "sweetalert";
 
 interface PropsInterface {
     login: Function,
@@ -90,7 +91,7 @@ class Register extends Component<PropsInterface> {
                 }
             }).catch((err) => {
                 if (err.response.status !== STATUS_API.SUCCESS) {
-                    CommonHelper._getErrorRequest(err);
+                    swal(err.response.data.message).then(r => console.log(r));
                 }
             });
         }
