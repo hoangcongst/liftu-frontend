@@ -7,6 +7,8 @@ import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 import CommonHelper from '../../helpers/common.helper';
 import AuthHelper from '../../helpers/auth.helper';
+import '../../styles/style-post.css';
+
 interface Props {
     match: any,
     user: any,
@@ -221,7 +223,9 @@ class BlogPost extends Component<Props, any> {
                                                             <a href="">{comment.user.display_name}  </a>
                                                             <small>{CommonHelper.formatDate(comment.created_at)}</small>
                                                         </h4>
-                                                        <p>{comment.content}</p>
+                                                        {comment.content.split('\n').map((item: string, i: number) => {
+                                                            return <p key={i}>{item}</p>;
+                                                        }) }
                                                         {
                                                             this.isOwner(comment.user.id) && <>
                                                                 {/* <button className="btn mb-1 mr-1 btn-xs btn-outline-success" onClick={() => { }}>Edit</button> */}
@@ -241,7 +245,7 @@ class BlogPost extends Component<Props, any> {
                                 }
                             </CardBody>
                         </Card>
-                        <Card className={AuthHelper.isAuthenticated(this.props.expired) ? "": "card-hidden"}>
+                        <Card className={AuthHelper.isAuthenticated(this.props.expired) ? "" : "card-hidden"}>
                             <CardHeader>
                                 <em className="fas fa-pencil-alt mr-2" />Add your Comment
                             </CardHeader>
@@ -249,7 +253,7 @@ class BlogPost extends Component<Props, any> {
                                 <form className="form-horizontal" action="/">
                                     <div className="form-group row">
                                         <Col xs="12">
-                                            <textarea className="form-control" value={this.state.commentContent} onChange={this.handleComment}
+                                            <textarea aria-multiline={true} className="form-control" value={this.state.commentContent} onChange={this.handleComment}
                                                 id="post-comment" name="post-comment" rows={4} placeholder="Comment here.." />
                                         </Col>
                                     </div>

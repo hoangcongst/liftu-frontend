@@ -219,13 +219,18 @@ class BlogEditorAndCreatePost extends Component<Props, any> {
                                 <CKEditor
                                     editor={ClassicEditor}
                                     data={this.state.post.content}
+                                    config={{
+                                        mediaEmbed: {
+                                            previewsInData: true
+                                        }
+                                    }}
                                     onInit={(editor: any) => {
                                         // Insert the toolbar before the editable area.
                                         editor.ui.getEditableElement().parentElement.insertBefore(
                                             editor.ui.view.toolbar.element,
                                             editor.ui.getEditableElement()
                                         );
-                                        editor.plugins.get("FileRepository").createUploadAdapter = function(loader: any) {
+                                        editor.plugins.get("FileRepository").createUploadAdapter = function (loader: any) {
                                             return new MyUploadAdapter(loader);
                                         };
                                     }}

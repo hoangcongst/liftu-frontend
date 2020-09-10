@@ -12,3 +12,7 @@
 .page-item.on .page-link {
     background-color: #e9ecef;
 }
+
+figure.media {
+    display: block;
+}
