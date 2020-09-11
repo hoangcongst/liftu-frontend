@@ -10,7 +10,6 @@ export const LOGIN_SUCCESS=0
 export const LOGIN_FAILED=1
 
 export interface Session {
-    token: string,
     user: Object,
     expired: string,
 }
@@ -43,8 +42,6 @@ export function loginAction(expired: string): SessionAction {
 }
 
 export function userInfoAction(user: Object): SessionAction {
-    
-    console.info('@WTF')
     return { type: INFO_USER, user };
 }
 

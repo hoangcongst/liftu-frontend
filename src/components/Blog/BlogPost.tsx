@@ -9,11 +9,14 @@ import CommonHelper from '../../helpers/common.helper';
 import AuthHelper from '../../helpers/auth.helper';
 import '../../styles/style-post.css';
 import {STATUS_API} from "../Common/constants";
+import { Dispatch } from 'redux';
+import { changeOgHeader } from '../../store/actions/actions';
 
 interface Props {
     match: any,
     user: any,
-    expired: string
+    expired: string,
+    changeOgHeader: Function
 }
 
 class BlogPost extends Component<Props, any> {
@@ -26,6 +29,8 @@ class BlogPost extends Component<Props, any> {
         post: {
             title: "",
             content: "",
+            description: "",
+            thumbnail: "",
             created_at: "",
             numberComment: 0,
             user: {
@@ -54,6 +59,9 @@ class BlogPost extends Component<Props, any> {
                 this.setState({
                     post: response.data.data
                 })
+                this.props.changeOgHeader(this.state.post.title,
+                    this.state.post.description, this.state.post.thumbnail,
+                    window.location.href)
             }
         );
     }
@@ -236,7 +244,7 @@ class BlogPost extends Component<Props, any> {
                                                         </h4>
                                                         {comment.content.split('\n').map((item: string, i: number) => {
                                                             return <p key={i}>{item}</p>;
-                                                        }) }
+                                                        })}
                                                         {
                                                             this.isOwner(comment.user.id) && <>
                                                                 {/* <button className="btn mb-1 mr-1 btn-xs btn-outline-success" onClick={() => { }}>Edit</button> */}
@@ -344,7 +352,6 @@ class BlogPost extends Component<Props, any> {
             </ContentWrapper>
         );
     }
-
 }
 
 const stateToProps = (state: any) => {
@@ -354,7 +361,12 @@ const stateToProps = (state: any) => {
     };
 };
 
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+    changeOgHeader: (title: string, description: string, image: string, url: string) =>
+        dispatch(changeOgHeader(title, description, image, url))
+})
+
 export default connect(
     stateToProps,
-    null
+    mapDispatchToProps
 )(BlogPost);

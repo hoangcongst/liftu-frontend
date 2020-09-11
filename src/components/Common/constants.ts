@@ -30,3 +30,4 @@ export const APP_MEDIAQUERY = {
 export const STATUS_API = {
     'SUCCESS'   : 200,
 };
+export const BASE_URL = 'http://liftu.textap.me'
