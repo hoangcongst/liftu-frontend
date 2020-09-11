@@ -37,7 +37,6 @@ const infoUser = (state: any, action: any) => {
 }
 
 const initialState: Session = {
-    token: '',
     expired: '',
     user: {}
 }

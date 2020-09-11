@@ -32,7 +32,8 @@ interface PropsApp extends RouteComponentProps {
 }
 
 class App extends Component<PropsApp> {
-    isChangeRoute = () => {
+    isChangeRouteWithoutUpdateMetaHeader = () => {
+        console.log(this.props.ogUrl !== window.location.href)
         return this.props.ogUrl !== window.location.href
     }
 
@@ -41,10 +42,14 @@ class App extends Component<PropsApp> {
         return (
             <>
                 <MetaTags>
-                    <title>{this.props.ogTitle}</title>
-                    <meta property="og:title" content={this.isChangeRoute() ? initialState.title : this.props.ogTitle} />
-                    <meta name="og:description" content={this.isChangeRoute() ? initialState.description : this.props.ogDescription} />
-                    <meta property="og:image" content={this.isChangeRoute() ? initialState.image : this.props.ogImage} />
+                    <title>{this.isChangeRouteWithoutUpdateMetaHeader() ?
+                        initialState.title : this.props.ogTitle}</title>
+                    <meta property="og:title" content={this.isChangeRouteWithoutUpdateMetaHeader() ?
+                        initialState.title : this.props.ogTitle} />
+                    <meta name="og:description" content={this.isChangeRouteWithoutUpdateMetaHeader() ?
+                        initialState.description : this.props.ogDescription} />
+                    <meta property="og:image" content={this.isChangeRouteWithoutUpdateMetaHeader() ?
+                        initialState.image : this.props.ogImage} />
                     <meta property="og:url" content={window.location.href} />
                 </MetaTags>
                 <Routes location={location} />
