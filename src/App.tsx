@@ -33,7 +33,6 @@ interface PropsApp extends RouteComponentProps {
 
 class App extends Component<PropsApp> {
     isChangeRouteWithoutUpdateMetaHeader = () => {
-        console.log(this.props.ogUrl !== window.location.href)
         return this.props.ogUrl !== window.location.href
     }
 
