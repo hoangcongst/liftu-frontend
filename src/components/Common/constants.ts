@@ -26,3 +26,5 @@ export const APP_MEDIAQUERY = {
     'tablet':                 768,
     'mobile':                 480
 };
+
+export const BASE_URL = 'http://liftu.textap.me'
