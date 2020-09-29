@@ -1,5 +1,5 @@
 export const API_COMMAND = {
-    BASE_URL: process.env.NODE_ENV === 'development' ? 'http://localhost:8090' : 'http://api-liftu.textap.me/liftu',
+    BASE_URL: process.env.NODE_ENV === 'development' ? 'http://localhost:8090' : 'http://liftu.textap.me:8081/liftu',
     HEALTH: { method: 'GET', url: '/health' },
 
     SIGNIN:  { method: 'POST', url: '/auth/login' },
