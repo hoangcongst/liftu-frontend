@@ -17,6 +17,10 @@ figure.media {
     display: block;
 }
 
+figure.image > img {
+    max-width: 100%;
+}
+
 .card-hidden {
     display: none;
 }
